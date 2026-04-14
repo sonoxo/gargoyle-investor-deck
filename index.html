@@ -1,0 +1,3773 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gargoyle Systems — Investor Brief</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    /* ── Custom Properties ── */
+    :root {
+      --bg: #ffffff;
+      --bg2: #f8fafc;
+      --surface: rgba(15,23,42,0.04);
+      --border: rgba(15,23,42,0.10);
+      --blue: #0284c7;
+      --blue-bright: #0ea5e9;
+      --blue-dim: rgba(2,132,199,0.10);
+      --green: #059669;
+      --green-dim: rgba(5,150,105,0.10);
+      --white: #0f172a;        /* primary text — dark navy */
+      --white-60: #475569;     /* secondary text */
+      --white-30: #94a3b8;     /* muted text */
+      --white-10: rgba(15,23,42,0.05);
+      --font: 'Inter', system-ui, -apple-system, sans-serif;
+      --ease: cubic-bezier(0.4,0,0.2,1);
+      --slide-dur: 650ms;
+    }
+
+    /* ── Reset ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg); color: var(--white); font-family: var(--font); -webkit-font-smoothing: antialiased; }
+
+    /* ── Progress Bar ── */
+    #progress-bar {
+      position: fixed; top: 0; left: 0; z-index: 1000;
+      height: 3px; width: 0%; transition: width 0.4s var(--ease);
+      background: linear-gradient(90deg, var(--blue), var(--green));
+      display: none;
+    }
+
+    /* ── Slide Counter ── */
+    #slide-counter {
+      position: fixed; bottom: 28px; right: 36px; z-index: 900;
+      font-size: 12px; font-weight: 500; letter-spacing: 0.08em;
+      color: var(--white-30); display: none;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* ── Nav Arrows ── */
+    .nav-arrow {
+      position: fixed; bottom: 24px; z-index: 900;
+      background: none; border: none; cursor: pointer;
+      color: var(--white-30); transition: color 0.2s; display: none;
+      padding: 8px;
+    }
+    .nav-arrow:hover { color: var(--white); }
+    #nav-prev { left: 36px; }
+    #nav-next { right: 80px; }
+    .nav-arrow svg { width: 20px; height: 20px; }
+
+    /* ── Nav Hint ── */
+    #nav-hint {
+      position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%);
+      z-index: 900; font-size: 11px; font-weight: 500; letter-spacing: 0.1em;
+      color: var(--white-30); text-transform: uppercase; display: none;
+      pointer-events: none;
+    }
+
+    /* ────────────────────────────────────────────
+       EMAIL GATE
+    ──────────────────────────────────────────── */
+    #email-gate {
+      position: fixed; inset: 0; z-index: 800;
+      background: var(--bg);
+      display: flex; align-items: center; justify-content: center;
+      flex-direction: column;
+      transition: opacity 0.7s var(--ease);
+    }
+    #email-gate.fade-out { opacity: 0; pointer-events: none; }
+
+    .gate-inner {
+      width: 100%; max-width: 520px; padding: 0 32px;
+      text-align: center;
+    }
+
+    .gate-logo {
+      display: flex; align-items: center; justify-content: center;
+      gap: 12px; margin-bottom: 56px;
+    }
+    .gate-logo-icon {
+      width: 44px; height: 44px;
+      object-fit: contain;
+    }
+    .gate-logo-text {
+      font-size: 18px; font-weight: 700; letter-spacing: 0.04em;
+      color: var(--white);
+    }
+
+    .gate-eyebrow {
+      font-size: 11px; font-weight: 600; letter-spacing: 0.16em;
+      text-transform: uppercase; color: var(--blue);
+      margin-bottom: 20px;
+    }
+
+    .gate-headline {
+      font-size: clamp(28px,5vw,42px); font-weight: 800;
+      line-height: 1.15; color: var(--white); margin-bottom: 20px;
+      letter-spacing: -0.02em;
+    }
+
+    .gate-sub {
+      font-size: 16px; line-height: 1.7; color: var(--white-60);
+      margin-bottom: 48px;
+    }
+
+    .gate-form { display: flex; flex-direction: column; gap: 12px; }
+
+    .gate-input {
+      width: 100%; padding: 16px 20px;
+      background: var(--white-10);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--white); font-family: var(--font); font-size: 15px;
+      outline: none; transition: border-color 0.2s;
+    }
+    .gate-input::placeholder { color: var(--white-30); }
+    .gate-input:focus { border-color: var(--blue); }
+
+    .gate-btn {
+      width: 100%; padding: 17px;
+      background: var(--blue); border: none; border-radius: 8px;
+      color: #fff; font-family: var(--font); font-size: 15px;
+      font-weight: 700; letter-spacing: 0.04em; cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+    }
+    .gate-btn:hover { background: var(--blue-bright); }
+    .gate-btn:active { transform: scale(0.98); }
+    .gate-btn.loading { opacity: 0.6; pointer-events: none; }
+
+    .gate-privacy {
+      margin-top: 20px; font-size: 12px; color: var(--white-30);
+      line-height: 1.6;
+    }
+
+    /* ────────────────────────────────────────────
+       SLIDE SYSTEM
+    ──────────────────────────────────────────── */
+    #deck {
+      position: fixed; inset: 0;
+      opacity: 0; transition: opacity 0.5s 0.2s var(--ease);
+      pointer-events: none;
+    }
+    #deck.visible { opacity: 1; pointer-events: all; }
+
+    .slide {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      padding: 80px 64px 80px;
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity var(--slide-dur) var(--ease),
+                  transform var(--slide-dur) var(--ease);
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .slide.active {
+      opacity: 1; transform: translateY(0); pointer-events: all;
+    }
+    .slide.exit-up {
+      opacity: 0; transform: translateY(-24px);
+    }
+
+    .slide-content {
+      width: 100%; max-width: 960px; position: relative; z-index: 2;
+    }
+
+    /* ── Slide Typography ── */
+    .eyebrow {
+      font-size: 11px; font-weight: 600; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--blue); margin-bottom: 20px;
+      display: block;
+    }
+    .slide-headline {
+      font-size: clamp(36px,5.5vw,72px); font-weight: 800;
+      line-height: 1.08; letter-spacing: -0.03em; color: var(--white);
+      margin-bottom: 20px;
+    }
+    .slide-headline .accent-blue { color: var(--blue); }
+    .slide-headline .accent-green { color: var(--green); }
+    .slide-subheadline {
+      font-size: clamp(18px,2.5vw,26px); font-weight: 400;
+      color: var(--white-60); margin-bottom: 36px; line-height: 1.4;
+    }
+    .slide-body {
+      font-size: clamp(14px,1.6vw,18px); line-height: 1.8;
+      color: var(--white-60); max-width: 680px;
+    }
+    .slide-tagline {
+      margin-top: 40px; font-size: clamp(14px,1.5vw,16px);
+      font-weight: 600; letter-spacing: 0.06em; color: var(--green);
+    }
+
+    /* ── Bullet Lists ── */
+    .bullet-list {
+      list-style: none; display: flex; flex-direction: column; gap: 14px;
+      margin-top: 32px;
+    }
+    .bullet-list li {
+      display: flex; align-items: flex-start; gap: 14px;
+      font-size: clamp(14px,1.5vw,17px); color: var(--white-60);
+      line-height: 1.5;
+    }
+    .bullet-list li::before {
+      content: '';
+      flex-shrink: 0; margin-top: 8px;
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--blue);
+    }
+    .bullet-list li strong { color: var(--white); }
+
+    /* ── Divider ── */
+    .divider {
+      width: 48px; height: 3px;
+      background: linear-gradient(90deg, var(--blue), var(--green));
+      border-radius: 2px; margin-bottom: 32px;
+    }
+
+    /* ── Two-column ── */
+    .two-col {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 48px;
+      margin-top: 40px;
+    }
+    @media (max-width: 700px) { .two-col { grid-template-columns: 1fr; gap: 28px; } }
+
+    /* ── Card ── */
+    .card {
+      background: var(--white-10); border: 1px solid var(--border);
+      border-radius: 12px; padding: 28px 30px;
+    }
+    .card-label {
+      font-size: 11px; font-weight: 600; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--white-30); margin-bottom: 14px;
+    }
+    .card-value {
+      font-size: clamp(20px,2.5vw,30px); font-weight: 800;
+      color: var(--white); line-height: 1.2; letter-spacing: -0.02em;
+    }
+    .card-sub { font-size: 14px; color: var(--white-60); margin-top: 8px; }
+
+    /* ────────────────────────────────────────────
+       SLIDE 1: RADAR
+    ──────────────────────────────────────────── */
+    #slide-1 { background: var(--bg); }
+
+    #radar-canvas {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      opacity: 0.55; pointer-events: none; z-index: 1;
+    }
+
+    .s1-content {
+      text-align: center; position: relative; z-index: 2;
+    }
+    .s1-logo {
+      display: flex; align-items: center; justify-content: center;
+      gap: 16px; margin-bottom: 36px;
+    }
+    .s1-logo-img {
+      width: 80px; height: 80px;
+      object-fit: contain;
+      opacity: 0.92;
+    }
+    .s1-headline {
+      font-size: clamp(52px,8vw,108px); font-weight: 900;
+      letter-spacing: -0.04em; line-height: 1;
+      color: var(--white);
+      margin-bottom: 16px;
+    }
+    .s1-sub {
+      font-size: clamp(15px,2vw,20px); font-weight: 500;
+      color: var(--blue); letter-spacing: 0.08em; text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+    .s1-tagline {
+      font-size: clamp(13px,1.6vw,16px); color: var(--white-60);
+      letter-spacing: 0.04em;
+    }
+    .s1-scroll-hint {
+      margin-top: 64px; font-size: 11px; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--white-30);
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+    }
+    .s1-scroll-hint-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--green); animation: pulse 2s infinite;
+    }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+    /* ────────────────────────────────────────────
+       SLIDE 2: THIS MAY NOT BE FOR YOU
+    ──────────────────────────────────────────── */
+    #slide-2 {
+      background: var(--bg);
+    }
+    .s2-content { text-align: left; max-width: 700px; }
+    #slide-2 .slide-body {
+      color: #334155;
+    }
+    #slide-2 .slide-body strong {
+      color: var(--white);
+    }
+    .s2-headline {
+      font-size: clamp(36px,5.5vw,68px); font-weight: 900;
+      letter-spacing: -0.03em; line-height: 1.05; color: var(--white);
+      margin-bottom: 48px;
+    }
+    .s2-beliefs {
+      list-style: none; display: flex; flex-direction: column; gap: 24px;
+    }
+    .s2-beliefs li {
+      font-size: clamp(15px,1.8vw,19px); color: #334155;
+      line-height: 1.5; padding-left: 24px; position: relative;
+    }
+    .s2-beliefs li::before {
+      content: '—'; position: absolute; left: 0; color: #64748b;
+    }
+    .s2-beliefs li strong { color: var(--white); }
+    .s2-close {
+      margin-top: 56px; font-size: clamp(14px,1.5vw,17px);
+      color: #475569; font-style: italic;
+    }
+
+    /* ────────────────────────────────────────────
+       SLIDE 3: SMALL DRONE THREAT
+    ──────────────────────────────────────────── */
+    .threat-intro {
+      max-width: 760px;
+      color: var(--white-60);
+    }
+    /* Desktop: constrain slide-2a so threat cards don't overflow */
+    #slide-2a .slide-headline { font-size: clamp(28px, 3.8vw, 50px); margin-bottom: 12px; }
+    #slide-2a .slide-body { margin-bottom: 10px; }
+    #slide-2a .threat-close { margin-top: 12px; padding: 12px 16px; }
+    .threat-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 14px;
+    }
+    .threat-card {
+      background: linear-gradient(180deg, rgba(248,250,252,0.9) 0%, rgba(241,245,249,0.88) 100%);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 18px 20px 16px;
+      min-height: 0;
+    }
+    .threat-card-label {
+      display: inline-block;
+      margin-bottom: 14px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #dc2626;
+    }
+    .threat-card-title {
+      font-size: clamp(18px,2.1vw,24px);
+      font-weight: 800;
+      line-height: 1.15;
+      color: var(--white);
+      margin-bottom: 10px;
+      letter-spacing: -0.02em;
+    }
+    .threat-card-body {
+      font-size: 14px;
+      line-height: 1.65;
+      color: var(--white-60);
+    }
+    .threat-close {
+      margin-top: 22px;
+      max-width: 860px;
+      padding: 16px 18px;
+      border-radius: 12px;
+      background: rgba(239,68,68,0.05);
+      border: 1px solid rgba(239,68,68,0.14);
+      font-size: clamp(14px,1.5vw,17px);
+      line-height: 1.6;
+      color: #7f1d1d;
+      font-weight: 600;
+    }
+
+    /* ────────────────────────────────────────────
+       SLIDE 4: WHO SECURES THE AIRSPACE
+    ──────────────────────────────────────────── */
+    .sector-grid {
+      display: grid; grid-template-columns: repeat(3,1fr); gap: 14px;
+      margin-top: 24px;
+    }
+    @media (max-width: 600px) { .sector-grid { grid-template-columns: repeat(2,1fr); } }
+    .sector-item {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 12px; overflow: hidden;
+      display: flex; flex-direction: column;
+    }
+    .sector-img { width: 100%; height: 148px; flex-shrink: 0; overflow: hidden; }
+    .sector-img img { width: 100%; height: 100%; object-fit: cover; object-position: center; display: block; }
+    .sector-body { padding: 12px 14px; display: flex; flex-direction: column; gap: 4px; }
+    .sector-icon { display: none; }
+    .sector-name { font-size: 13px; font-weight: 700; color: var(--white); line-height: 1.3; }
+    .sector-desc { font-size: 11px; color: var(--white-60); line-height: 1.5; }
+
+    /* ────────────────────────────────────────────
+       SLIDE 4: THE PROBLEM
+    ──────────────────────────────────────────── */
+    .problem-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-top: 40px; }
+    @media (max-width:600px) { .problem-grid { grid-template-columns:1fr; } }
+    .problem-col { }
+    .problem-col-title {
+      font-size: 11px; font-weight: 700; letter-spacing: 0.14em;
+      text-transform: uppercase; margin-bottom: 16px;
+    }
+    .problem-col-title.military { color: var(--white-30); }
+    .problem-col-title.gargoyle { color: var(--green); }
+    .problem-items { display: flex; flex-direction: column; gap: 10px; }
+    .problem-item {
+      padding: 12px 16px; border-radius: 8px;
+      font-size: 14px; line-height: 1.5;
+    }
+    .problem-item.bad {
+      background: rgba(239,68,68,0.06); border: 1px solid rgba(239,68,68,0.18);
+      color: #6b7280;
+    }
+    .problem-item.cost {
+      background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.22);
+      color: #dc2626; font-weight: 700; font-size: 16px;
+    }
+    .problem-result {
+      margin-top: 32px; padding: 20px 24px;
+      background: rgba(239,68,68,0.05); border: 1px solid rgba(239,68,68,0.18);
+      border-radius: 10px;
+      font-size: clamp(14px,1.5vw,17px); color: #dc2626; font-weight: 600;
+    }
+
+    /* ────────────────────────────────────────────
+       SLIDE 5: SECURITY GAP
+    ──────────────────────────────────────────── */
+    #slide-5 .slide-content { max-width: 1080px; }
+    #slide-5 .slide-headline { font-size: clamp(28px, 3.6vw, 48px); margin-bottom: 10px; }
+    #slide-5 .slide-body { margin-bottom: 0; }
+    #slide-5 .gap-hero-card { margin-top: 10px; padding: 14px; }
+    #slide-5 .gap-hero-card img { max-height: 260px; object-fit: contain; }
+    #slide-5 .slide-body strong { font-weight: 700; color: var(--white); }
+    .gap-hero-card {
+      margin-top: 18px;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 18px;
+      background: linear-gradient(180deg, rgba(248,250,252,0.96) 0%, rgba(241,245,249,0.92) 100%);
+    }
+    .gap-hero-card img {
+      width: min(82%, 860px);
+      height: auto;
+      display: block;
+      margin: 0 auto;
+      border-radius: 14px;
+      object-fit: contain;
+    }
+    .gap-summary-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 12px;
+    }
+    .gap-summary-card {
+      border-radius: 12px;
+      padding: 14px 16px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.78);
+    }
+    .gap-summary-card.good {
+      background: rgba(5,150,105,0.08);
+      border-color: rgba(5,150,105,0.18);
+    }
+    .gap-summary-card.alert {
+      background: rgba(239,68,68,0.06);
+      border-color: rgba(239,68,68,0.16);
+    }
+    .gap-summary-label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+    .gap-summary-card.good .gap-summary-label { color: var(--green); }
+    .gap-summary-card.alert .gap-summary-label { color: #dc2626; }
+    .gap-summary-text {
+      font-size: 13px;
+      line-height: 1.6;
+      color: var(--white-60);
+    }
+    .gap-summary-text strong { color: var(--white); }
+    .gap-layer-grid {
+      display: grid;
+      grid-template-columns: repeat(3,1fr);
+      gap: 10px;
+      margin-top: 14px;
+    }
+    .gap-layer-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      display: flex;
+      align-items: flex-start;
+      gap: 11px;
+      padding: 11px;
+    }
+    .gap-layer-card.attention {
+      background: rgba(239,68,68,0.04);
+      border-color: rgba(239,68,68,0.16);
+    }
+    .gap-layer-thumb {
+      width: 72px;
+      height: 72px;
+      flex-shrink: 0;
+      overflow: hidden;
+      border-radius: 9px;
+      background: #fff;
+    }
+    .gap-layer-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .gap-layer-body {
+      flex: 1;
+      padding: 2px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .gap-layer-tag {
+      font-size: 9.5px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--white-30);
+    }
+    .gap-layer-card.attention .gap-layer-tag { color: #dc2626; }
+    .gap-layer-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--white);
+      line-height: 1.3;
+    }
+    .gap-layer-desc {
+      font-size: 10.5px;
+      color: var(--white-60);
+      line-height: 1.5;
+    }
+
+    /* ────────────────────────────────────────────
+       SLIDE 7: WHAT GARGOYLE DEPLOYS
+    ──────────────────────────────────────────── */
+    #slide-5a .slide-headline { font-size: clamp(24px, 3.2vw, 44px); margin-bottom: 10px; }
+    #slide-5a .slide-body { margin-bottom: 10px; }
+    .hardware-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+      gap: 20px;
+      align-items: center;
+      margin-top: 16px;
+    }
+    .hardware-visual {
+      background: linear-gradient(180deg, rgba(248,250,252,0.95) 0%, rgba(241,245,249,0.92) 100%);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 18px;
+    }
+    .hardware-visual img {
+      width: 100%;
+      height: 210px;
+      object-fit: cover;
+      object-position: center 45%;
+      display: block;
+      border-radius: 12px;
+    }
+    .hardware-copy {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .hardware-callout {
+      padding: 18px 20px;
+      border-radius: 14px;
+      background: rgba(2,132,199,0.06);
+      border: 1px solid rgba(2,132,199,0.14);
+    }
+    .hardware-callout-label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--blue);
+    }
+    .hardware-callout-title {
+      font-size: clamp(20px,2.5vw,30px);
+      font-weight: 800;
+      line-height: 1.15;
+      color: var(--white);
+      letter-spacing: -0.02em;
+    }
+    .hardware-points {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .hardware-point {
+      padding: 14px 16px;
+      border-radius: 12px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--white-60);
+    }
+    .hardware-point strong { color: var(--white); }
+
+    /* ────────────────────────────────────────────
+       SLIDE 8: GARGOYLE CAPABILITIES
+    ──────────────────────────────────────────── */
+    #slide-6 .slide-content { max-width: 1060px; }
+    #slide-6 .eyebrow { margin-bottom: 8px; }
+    #slide-6 .slide-headline {
+      font-size: clamp(28px, 3.6vw, 44px);
+      margin-bottom: 4px;
+      line-height: 1.02;
+      letter-spacing: -0.035em;
+    }
+    #slide-6 .slide-subheadline {
+      font-size: clamp(13px, 1.5vw, 17px);
+      margin-bottom: 12px;
+      color: #334155;
+    }
+    /* Top row: small image + two bullet points side by side */
+    .s6-shell {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 0;
+    }
+    .s6-side {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 14px;
+    }
+    .s6-hero-card {
+      background: linear-gradient(180deg, rgba(248,250,252,0.95) 0%, rgba(241,245,249,0.92) 100%);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 10px;
+      flex-shrink: 0;
+    }
+    .s6-hero-card img {
+      width: 90px;
+      height: 90px;
+      object-fit: contain;
+      object-position: center;
+      display: block;
+    }
+    .s6-points {
+      display: flex;
+      flex-direction: row;
+      gap: 10px;
+      flex: 1;
+    }
+    .s6-point {
+      flex: 1;
+      padding: 10px 12px;
+      border-radius: 10px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      font-size: 12px;
+      line-height: 1.5;
+      color: var(--white-60);
+    }
+    .s6-point strong { color: var(--white); }
+
+    /* 3-column capability grid — fits 6 items in 2 rows */
+    .cap-grid {
+      display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 9px;
+      margin-top: 0;
+    }
+    .cap-item {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 10px; overflow: hidden;
+      display: flex; flex-direction: row; align-items: center;
+      padding: 9px 10px; gap: 9px;
+    }
+    .cap-thumb {
+      width: 40px; height: 40px;
+      flex-shrink: 0; overflow: hidden;
+      border-radius: 7px;
+    }
+    .cap-thumb img {
+      width: 100%; height: 100%; object-fit: cover; object-position: center;
+      display: block;
+    }
+    .cap-body { flex: 1; padding: 0; display: flex; flex-direction: column; gap: 2px; }
+    .cap-title { font-size: 11px; font-weight: 700; color: var(--white); line-height: 1.22; }
+    .cap-desc { font-size: 10px; color: var(--white-60); line-height: 1.36; }
+
+    /* ────────────────────────────────────────────
+       SLIDE 7: SPLIT SCREEN BEFORE/AFTER
+    ──────────────────────────────────────────── */
+    .split {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 24px;
+      width: 100%; margin-top: 32px;
+    }
+    @media (max-width:600px) { .split { grid-template-columns:1fr; } }
+    .split-panel {
+      border-radius: 14px; padding: 32px 28px; min-height: 280px;
+      position: relative; overflow: hidden;
+    }
+    .split-panel.before {
+      background: rgba(254,242,242,0.8);
+      border: 1px solid rgba(239,68,68,0.18);
+    }
+    .split-panel.after {
+      background: rgba(240,253,244,0.8);
+      border: 1px solid rgba(5,150,105,0.2);
+    }
+    .split-label {
+      font-size: 11px; font-weight: 700; letter-spacing: 0.14em;
+      text-transform: uppercase; margin-bottom: 20px;
+    }
+    .split-label.before { color: #dc2626; }
+    .split-label.after { color: var(--green); }
+    .split-title { font-size: clamp(16px,2vw,22px); font-weight: 800; color: var(--white); margin-bottom: 16px; line-height: 1.2; }
+    .split-items { display: flex; flex-direction: column; gap: 10px; }
+    .split-item {
+      display: flex; align-items: center; gap: 10px;
+      font-size: 14px; color: var(--white-60);
+    }
+    .split-item-dot {
+      width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+    }
+    .split-item-dot.bad { background: #ef4444; }
+    .split-item-dot.good { background: var(--green); }
+
+    /* ────────────────────────────────────────────
+       SLIDE 8: EVERY SECURITY SYSTEM MISSES THE SKY
+    ──────────────────────────────────────────── */
+    .miss-visual {
+      margin-top: 40px; display: grid;
+      grid-template-columns: 1fr 1fr; gap: 20px;
+    }
+    @media (max-width:600px) { .miss-visual { grid-template-columns:1fr; } }
+    .miss-panel {
+      border-radius: 12px; padding: 24px;
+      background: var(--white-10); border: 1px solid var(--border);
+    }
+    .miss-panel-title {
+      font-size: 11px; font-weight: 700; letter-spacing: 0.12em;
+      text-transform: uppercase; margin-bottom: 14px;
+    }
+    .miss-panel-title.protected { color: var(--green); }
+    .miss-panel-title.exposed { color: #dc2626; }
+    .miss-items { display: flex; flex-direction: column; gap: 8px; }
+    .miss-item {
+      display: flex; align-items: center; gap: 10px;
+      font-size: 13px; color: var(--white-60);
+    }
+    .miss-check { color: var(--green); font-size: 14px; }
+    .miss-x { color: #dc2626; font-size: 14px; }
+    .miss-tagline-box {
+      margin-top: 32px; padding: 20px 24px;
+      background: var(--green-dim); border: 1px solid rgba(5,150,105,0.2);
+      border-radius: 10px;
+      font-size: clamp(14px,1.5vw,17px); color: var(--white);
+      font-weight: 600; text-align: center;
+    }
+    .miss-tagline-box span { color: var(--green); }
+
+    /* ────────────────────────────────────────────
+       SLIDE 9: WHY GARGOYLE WINS — TABLE
+    ──────────────────────────────────────────── */
+    .compare-table {
+      width: 100%; border-collapse: collapse; margin-top: 36px;
+      font-size: clamp(13px,1.4vw,15px);
+    }
+    .compare-table thead tr th {
+      padding: 14px 20px; text-align: left;
+      font-size: 11px; font-weight: 800; letter-spacing: 0.12em;
+      text-transform: uppercase; color: #64748b;
+      border-bottom: 1px solid var(--border);
+    }
+    .compare-table thead tr th:first-child { color: #94a3b8; }
+    .compare-table thead tr th.col-gargoyle { color: var(--green); }
+    .compare-table tbody tr td {
+      padding: 16px 20px; border-bottom: 1px solid rgba(15,23,42,0.07);
+      vertical-align: top;
+    }
+    .compare-table tbody tr td:first-child {
+      font-weight: 700; color: #334155; font-size: 12px;
+      letter-spacing: 0.06em; text-transform: uppercase;
+    }
+    .compare-table tbody tr td.col-military {
+      color: #475569;
+      font-weight: 500;
+    }
+    .compare-table tbody tr td.col-gargoyle {
+      color: var(--white); font-weight: 700;
+    }
+    .compare-table tbody tr:last-child td { border-bottom: none; }
+    .compare-table tbody tr:hover td { background: var(--white-10); }
+    .gargoyle-header-cell {
+      background: rgba(5,150,105,0.12);
+      border-radius: 6px 6px 0 0;
+      color: var(--green) !important;
+    }
+
+    /* ────────────────────────────────────────────
+       SLIDE 10: MARKET OPPORTUNITY
+    ──────────────────────────────────────────── */
+    .market-layout {
+      display: grid;
+      grid-template-columns: minmax(280px, 0.78fr) minmax(0, 1.42fr);
+      gap: 18px;
+      margin-top: 24px;
+      align-items: stretch;
+    }
+    @media (max-width:700px) { .market-layout { grid-template-columns: 1fr; } }
+    #slide-10 .slide-content { max-width: 1080px; }
+    #slide-10 .slide-body {
+      max-width: 760px;
+    }
+    .market-stat-panel,
+    .market-segment-panel,
+    .market-chart-panel {
+      padding: 18px 20px;
+      border-radius: 16px;
+      background: linear-gradient(180deg, rgba(248,250,252,0.92) 0%, rgba(241,245,249,0.9) 100%);
+      border: 1px solid var(--border);
+    }
+    .market-stat-panel {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-height: 100%;
+    }
+    .market-stat-inner {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .market-stat-kicker {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--green);
+    }
+    .market-stat-value {
+      font-size: clamp(40px, 5.2vw, 62px);
+      font-weight: 900;
+      line-height: 0.95;
+      color: var(--white);
+      letter-spacing: -0.04em;
+    }
+    .market-stat-title {
+      font-size: 17px;
+      font-weight: 700;
+      line-height: 1.2;
+      color: var(--white);
+    }
+    .market-stat-copy {
+      font-size: 13px;
+      line-height: 1.6;
+      color: var(--white-60);
+      max-width: 300px;
+    }
+    .market-right {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      min-width: 0;
+    }
+    .market-sectors {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+    }
+    .market-sector {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-height: 0;
+      padding: 12px 12px;
+      background: var(--white-10); border: 1px solid var(--border);
+      border-radius: 12px;
+    }
+    .market-sector-icon {
+      width: 34px; height: 34px; flex-shrink: 0;
+      display: inline-flex; align-items: center; justify-content: center;
+      background: linear-gradient(180deg, rgba(248,250,252,0.95) 0%, rgba(226,232,240,0.88) 100%);
+      border: 1px solid rgba(148,163,184,0.18);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 8px 18px rgba(15,23,42,0.06);
+    }
+    .market-sector-icon img { width: 100%; height: 100%; display: block; }
+    .market-sector-name {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--white);
+      line-height: 1.32;
+      flex: 1;
+    }
+    .market-chart-title {
+      font-size: 11px; font-weight: 700; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--white-30); margin-bottom: 12px;
+    }
+    .market-bars { display: flex; flex-direction: column; gap: 9px; }
+    .market-bar-row {
+      display: grid;
+      grid-template-columns: 48px minmax(0, 1fr) 64px;
+      align-items: center;
+      gap: 10px;
+    }
+    .market-bar-year {
+      font-size: 12px;
+      color: var(--white-60);
+      width: 48px;
+      text-align: left;
+      flex-shrink: 0;
+      font-variant-numeric: tabular-nums;
+    }
+    .market-bar-track {
+      flex: 1; height: 28px; background: var(--white-10);
+      border-radius: 4px; overflow: hidden;
+    }
+    .market-bar-fill {
+      height: 100%; border-radius: 4px;
+      background: linear-gradient(90deg, var(--blue), var(--green));
+      transition: width 1s var(--ease);
+    }
+    .market-bar-val {
+      font-size: 13px;
+      color: var(--white);
+      font-weight: 700;
+      width: 64px;
+      flex-shrink: 0;
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* ────────────────────────────────────────────
+       SLIDE 11: BUSINESS MODEL
+    ──────────────────────────────────────────── */
+    .biz-streams {
+      display: grid; grid-template-columns: repeat(3,1fr); gap: 16px;
+      margin-top: 40px;
+    }
+    @media (max-width:600px) { .biz-streams { grid-template-columns:1fr; } }
+    .biz-stream {
+      background: var(--white-10); border: 1px solid var(--border);
+      border-radius: 12px; padding: 26px 22px;
+    }
+    .biz-stream-num {
+      font-size: 11px; font-weight: 700; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--blue); margin-bottom: 14px;
+    }
+    .biz-stream-title {
+      font-size: 17px; font-weight: 800; color: var(--white);
+      margin-bottom: 10px; line-height: 1.3;
+    }
+    .biz-stream-desc { font-size: 13px; color: var(--white-60); line-height: 1.6; }
+    .biz-expansion {
+      margin-top: 28px; padding: 22px 26px;
+      background: var(--green-dim); border: 1px solid rgba(16,185,129,0.2);
+      border-radius: 12px;
+    }
+    .biz-expansion-label {
+      font-size: 11px; font-weight: 700; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--green); margin-bottom: 10px;
+    }
+    .biz-expansion-text { font-size: 15px; color: var(--white); font-weight: 600; line-height: 1.5; }
+
+    /* ────────────────────────────────────────────
+       SLIDE 12: FIRST PAYING CUSTOMER
+    ──────────────────────────────────────────── */
+    .tulsa-customer-hero {
+      display: flex; align-items: center; gap: 12px;
+      margin: 10px 0 18px;
+    }
+    .tulsa-logo-img {
+      width: 36px; height: 36px; border-radius: 8px;
+      object-fit: contain; background: #fff; border: 1px solid var(--border);
+    }
+    .tulsa-customer-name {
+      font-size: 20px; font-weight: 800; color: var(--white);
+    }
+    .tulsa-customer-tag {
+      font-size: 11px; font-weight: 700; color: var(--green);
+      background: var(--green-dim); padding: 3px 10px;
+      border-radius: 20px; letter-spacing: 0.06em; text-transform: uppercase;
+    }
+    .tulsa-customer-date {
+      font-size: 11px; font-weight: 500; color: var(--white-30);
+      letter-spacing: 0.06em;
+    }
+    .tulsa-photos {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px;
+      margin-bottom: 18px;
+    }
+    .tulsa-photo { display: flex; flex-direction: column; align-items: center; }
+    .tulsa-photo-ph {
+      width: 100%; aspect-ratio: 4/3;
+      background: var(--surface); border: 1.5px dashed var(--border);
+      border-radius: 10px; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 8px;
+      color: var(--white-30);
+    }
+    .tulsa-photo-ph svg { width: 30px; height: 30px; opacity: 0.45; }
+    .tulsa-photo-ph-hint {
+      font-size: 9.5px; font-weight: 600; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--white-30);
+    }
+    .tulsa-photo-img {
+      width: 100%; aspect-ratio: 4/3;
+      border-radius: 10px; overflow: hidden;
+    }
+    .tulsa-photo-img img {
+      width: 100%; height: 100%; object-fit: cover; object-position: center; display: block;
+    }
+    .tulsa-photo-lbl {
+      font-size: 12px; font-weight: 600; color: var(--white-60);
+      margin-top: 8px; text-align: center;
+    }
+    .tulsa-pricing {
+      display: flex; align-items: stretch;
+      background: var(--white-10); border: 1px solid var(--border);
+      border-radius: 12px; overflow: hidden;
+    }
+    .tulsa-price-item {
+      flex: 1; padding: 16px 24px; text-align: center;
+    }
+    .tulsa-price-item:not(:last-child) { border-right: 1px solid var(--border); }
+    .tulsa-price-val {
+      font-size: 28px; font-weight: 900; color: var(--white);
+      display: block; line-height: 1.1;
+    }
+    .tulsa-price-mo { font-size: 16px; font-weight: 600; }
+    .tulsa-price-lbl {
+      font-size: 11px; font-weight: 600; color: var(--white-60);
+      letter-spacing: 0.08em; text-transform: uppercase;
+      margin-top: 4px; display: block;
+    }
+    .tulsa-price-note {
+      font-size: 11px; color: var(--green); font-weight: 700;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      margin-top: 3px; display: block;
+    }
+
+    /* ────────────────────────────────────────────
+       SLIDE 13: EXPANSION PATH
+    ──────────────────────────────────────────── */
+    .expansion-path {
+      display: grid; grid-template-columns: 1fr auto 1fr auto 1fr; gap: 0;
+      align-items: start; margin-top: 48px;
+    }
+    @media (max-width:700px) {
+      .expansion-path { grid-template-columns:1fr; }
+      .path-arrow { display: none; }
+    }
+    .path-stage {
+      background: var(--white-10); border: 1px solid var(--border);
+      border-radius: 14px; padding: 28px 24px; text-align: center;
+    }
+    .path-stage-num {
+      font-size: 11px; font-weight: 700; letter-spacing: 0.16em;
+      text-transform: uppercase; color: var(--blue); margin-bottom: 14px;
+    }
+    .path-stage-title {
+      font-size: clamp(15px,1.8vw,20px); font-weight: 800;
+      color: var(--white); margin-bottom: 12px; line-height: 1.2;
+    }
+    .path-stage-desc { font-size: 13px; color: var(--white-60); line-height: 1.6; }
+    .path-arrow {
+      align-self: center; padding: 0 16px;
+      font-size: 24px; color: var(--white-30);
+    }
+    .path-key-line {
+      margin-top: 32px; text-align: center;
+      font-size: clamp(14px,1.5vw,17px); font-weight: 600; color: var(--green);
+    }
+
+    /* ────────────────────────────────────────────
+       SLIDE 13: THE VISION
+    ──────────────────────────────────────────── */
+    .vision-layers {
+      display: flex; flex-direction: column; gap: 0;
+      margin-top: 40px; max-width: 640px;
+    }
+    .vision-layer {
+      display: flex; align-items: center; gap: 20px;
+      padding: 16px 20px; border-radius: 10px;
+      border: 1px solid transparent;
+      transition: all 0.2s;
+    }
+    .vision-layer.past {
+      background: var(--white-10);
+      border-color: rgba(15,23,42,0.07);
+    }
+    .vision-layer.next {
+      background: var(--green-dim);
+      border-color: rgba(5,150,105,0.25);
+    }
+    .vision-layer-num {
+      font-size: 11px; font-weight: 700; letter-spacing: 0.1em;
+      color: var(--white-30); width: 24px; flex-shrink: 0;
+      text-align: right;
+    }
+    .vision-layer.next .vision-layer-num { color: var(--green); }
+    .vision-layer-name {
+      font-size: clamp(15px,1.8vw,19px); font-weight: 700; color: var(--white-60);
+    }
+    .vision-layer.next .vision-layer-name { color: var(--white); font-size: clamp(16px,2vw,22px); }
+    .vision-layer-badge {
+      margin-left: auto; font-size: 11px; font-weight: 700;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--green); background: var(--green-dim);
+      border: 1px solid rgba(16,185,129,0.25); border-radius: 20px;
+      padding: 4px 12px; flex-shrink: 0;
+    }
+    .vision-close {
+      margin-top: 32px;
+      font-size: clamp(14px,1.5vw,17px); color: var(--white-60);
+      line-height: 1.7;
+    }
+    .vision-close strong { color: var(--white); }
+
+    /* ────────────────────────────────────────────
+       SLIDE 14: SECURITY STACK
+    ──────────────────────────────────────────── */
+    .sec-stack {
+      display: flex; flex-direction: column;
+      max-width: 600px; margin: 24px auto 0;
+      border: 1px solid var(--border); border-radius: 14px;
+      overflow: hidden;
+    }
+    .sec-stack-layer {
+      display: flex; align-items: center; gap: 14px;
+      padding: 13px 20px;
+      font-size: clamp(13px, 1.4vw, 15px); font-weight: 500;
+      color: var(--white-60); background: var(--surface);
+      border-bottom: 1px solid var(--border);
+    }
+    .sec-stack-layer:last-child { border-bottom: none; }
+    .sec-stack-layer.gargoyle {
+      background: linear-gradient(90deg, rgba(2,132,199,0.09), rgba(5,150,105,0.07));
+      color: var(--white); font-weight: 600; padding: 17px 20px;
+      border-top: 2px solid var(--blue);
+    }
+    .ssl-num {
+      font-size: 10px; font-weight: 700; color: var(--white-30);
+      letter-spacing: 0.07em; min-width: 24px; text-transform: uppercase;
+    }
+    .gargoyle .ssl-num { color: var(--blue); }
+    .sec-stack-sep {
+      padding: 9px 20px; background: var(--white-10);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; gap: 10px;
+      font-size: 10px; font-weight: 700; color: var(--white-30);
+      letter-spacing: 0.1em; text-transform: uppercase;
+    }
+    .sec-stack-sep::before, .sec-stack-sep::after {
+      content: ''; flex: 1; height: 1px; background: var(--border);
+    }
+    .sec-stack-badge {
+      margin-left: auto; font-size: 10px; font-weight: 700;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      background: linear-gradient(90deg, var(--blue), var(--green));
+      color: white; padding: 3px 10px; border-radius: 20px;
+    }
+    .sec-stack-close {
+      text-align: center; margin-top: 22px;
+      font-size: clamp(13px, 1.4vw, 15px); color: var(--white-60); line-height: 1.6;
+    }
+
+    /* ────────────────────────────────────────────
+       SLIDE 15: ACQUISITION PATHWAYS
+    ──────────────────────────────────────────── */
+    #slide-15 .slide-content { max-width: 1060px; }
+    .acq-sub {
+      font-size: clamp(13px, 1.4vw, 15px); color: var(--white-60);
+      max-width: 620px; text-align: center; margin: 0 auto 28px; line-height: 1.6;
+    }
+
+    /* ── Team Slide ── */
+    .team-cards {
+      display: flex; gap: 40px; justify-content: center; align-items: flex-start;
+    }
+    .team-card {
+      display: flex; flex-direction: column; align-items: center;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 20px; padding: 36px 32px 32px;
+      width: 280px; text-align: center;
+    }
+    .team-photo {
+      width: 100px; height: 100px; border-radius: 50%;
+      object-fit: cover; object-position: top;
+      border: 2px solid var(--border);
+      margin-bottom: 16px;
+    }
+    .team-role {
+      font-size: 10px; font-weight: 700; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--blue); margin-bottom: 6px;
+    }
+    .team-name {
+      font-size: clamp(16px, 1.8vw, 20px); font-weight: 700;
+      color: var(--white); line-height: 1.2;
+    }
+    .team-divider {
+      width: 36px; height: 2px; background: var(--border);
+      margin: 16px auto;
+    }
+    .team-creds {
+      list-style: none; padding: 0; margin: 0;
+      display: flex; flex-direction: column; gap: 8px;
+    }
+    .team-creds li {
+      font-size: clamp(11px, 1.2vw, 13px); color: var(--white-60);
+      font-weight: 500;
+    }
+    .acq-columns {
+      display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 18px;
+      margin-bottom: 24px;
+    }
+    .acq-col {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 14px; padding: 22px 18px;
+      display: flex; flex-direction: column; gap: 12px;
+    }
+    .acq-col-title {
+      font-size: clamp(10px, 1.1vw, 12px); font-weight: 700;
+      letter-spacing: 0.09em; text-transform: uppercase;
+      padding-bottom: 12px; border-bottom: 1px solid var(--border);
+    }
+    .acq-col:nth-child(1) .acq-col-title { color: var(--blue); }
+    .acq-col:nth-child(2) .acq-col-title { color: #8b5cf6; }
+    .acq-col:nth-child(3) .acq-col-title { color: var(--green); }
+    .acq-companies { display: flex; flex-direction: column; gap: 7px; }
+    .acq-co {
+      display: flex; align-items: center; gap: 9px;
+      padding: 8px 10px; border-radius: 8px; background: var(--white-10);
+    }
+    .acq-co img {
+      width: 22px; height: 22px; object-fit: contain; border-radius: 4px;
+      background: white; padding: 2px; flex-shrink: 0;
+    }
+    .acq-co-name {
+      font-size: clamp(11px, 1.2vw, 13px); font-weight: 600; color: var(--white);
+    }
+    .acq-col-desc {
+      font-size: clamp(10px, 1.0vw, 12px); color: var(--white-30); line-height: 1.5; margin-top: 4px;
+    }
+    .acq-closing {
+      text-align: center; max-width: 660px; margin: 0 auto;
+      font-size: clamp(13px, 1.4vw, 15px); color: var(--white-60); line-height: 1.6;
+    }
+    .acq-footer {
+      text-align: center; margin-top: 10px;
+      font-size: clamp(11px, 1.2vw, 13px); color: var(--blue); font-weight: 500;
+    }
+
+    /* ────────────────────────────────────────────
+       SLIDE 16: FINAL CTA
+    ──────────────────────────────────────────── */
+    #slide-16 { text-align: center; }
+    .s14-content { max-width: 720px; margin: 0 auto; }
+    .s14-headline {
+      font-size: clamp(48px,7vw,96px); font-weight: 900;
+      letter-spacing: -0.04em; line-height: 1;
+      color: var(--white); margin-bottom: 14px;
+    }
+    .s14-sub {
+      font-size: clamp(14px,1.8vw,20px); color: var(--blue);
+      font-weight: 500; letter-spacing: 0.04em; margin-bottom: 24px;
+    }
+    .s14-contacts {
+      display: flex; flex-direction: column; gap: 14px;
+      align-items: center;
+    }
+    .s14-contact {
+      display: flex; align-items: center; gap: 12px;
+      font-size: clamp(14px,1.6vw,17px); color: var(--white-60);
+    }
+    .s14-contact a { color: var(--white); text-decoration: none; }
+    .s14-contact a:hover { color: var(--blue); }
+    .s14-demo { margin-top: 28px; }
+    .s14-demo-btn {
+      display: inline-flex; align-items: center; gap: 10px;
+      padding: 14px 32px; border-radius: 50px;
+      background: var(--blue-dim); border: 1.5px solid var(--blue);
+      color: var(--blue); font-size: 15px; font-weight: 700;
+      letter-spacing: 0.03em; text-decoration: none;
+      transition: background 0.2s, color 0.2s;
+    }
+    .s14-demo-btn:hover { background: var(--blue); color: #fff; }
+    .s14-demo-btn svg { width: 16px; height: 16px; flex-shrink: 0; }
+    .s14-divider {
+      width: 64px; height: 2px; margin: 40px auto;
+      background: linear-gradient(90deg,var(--blue),var(--green));
+      border-radius: 2px;
+    }
+    .s14-tagline {
+      font-size: clamp(12px,1.4vw,15px); color: var(--white-30);
+      letter-spacing: 0.06em; text-transform: uppercase;
+    }
+
+    /* ── Radial glow ── */
+    .glow {
+      position: absolute; border-radius: 50%; pointer-events: none;
+      filter: blur(100px); opacity: 0.07; z-index: 0;
+    }
+    .glow-blue { background: #0ea5e9; }
+    .glow-green { background: #10b981; }
+
+    /* ── Fade in animation ── */
+    @keyframes fadeUp {
+      from { opacity:0; transform:translateY(12px); }
+      to { opacity:1; transform:translateY(0); }
+    }
+    .slide.active .anim { animation: fadeUp 0.5s var(--ease) both; }
+    .slide.active .anim-1 { animation-delay: 0.05s; }
+    .slide.active .anim-2 { animation-delay: 0.15s; }
+    .slide.active .anim-3 { animation-delay: 0.25s; }
+    .slide.active .anim-4 { animation-delay: 0.35s; }
+    .slide.active .anim-5 { animation-delay: 0.45s; }
+    .slide.active .anim-6 { animation-delay: 0.55s; }
+
+    /* ── Language Toggle ── */
+    #lang-toggle {
+      position: fixed; top: 20px; right: 24px; z-index: 1001;
+      display: none;
+      align-items: center; gap: 0;
+      background: rgba(255,255,255,0.9);
+      border: 1px solid var(--border);
+      border-radius: 20px; padding: 4px;
+      font-family: var(--font); cursor: pointer;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    }
+    .lang-opt {
+      font-size: 11px; font-weight: 700; letter-spacing: 0.08em;
+      padding: 4px 11px; border-radius: 16px;
+      transition: background 0.18s, color 0.18s;
+      color: var(--white-30); background: transparent; border: none;
+      cursor: pointer; font-family: var(--font);
+    }
+    .lang-opt.active { background: var(--blue); color: #fff; }
+    /* JP company rows */
+    .acq-co-jp { display: none; }
+    html[lang="ja"] .acq-col-en-only { display: none !important; }
+    html:not([lang="ja"]) .acq-col-jp-only { display: none !important; }
+
+    /* ════════════════════════════════════════════
+       MOBILE  (≤ 600px)
+    ════════════════════════════════════════════ */
+    @media (max-width: 600px) {
+
+      /* ── Global layout ── */
+      .slide {
+        padding: 52px calc(20px + env(safe-area-inset-right)) 64px calc(20px + env(safe-area-inset-left));
+        align-items: flex-start;
+      }
+      .slide-content,
+      .two-col,
+      .threat-grid,
+      .sector-grid,
+      .problem-grid,
+      .hardware-layout,
+      .s6-shell,
+      .split,
+      .miss-visual,
+      .market-layout,
+      .biz-streams,
+      .expansion-path,
+      .acq-columns {
+        min-width: 0;
+      }
+      .eyebrow { margin-bottom: 10px; }
+      .slide-headline { margin-bottom: 10px; padding-right: 84px; }
+      .slide-body { font-size: 14px; line-height: 1.65; }
+      .slide-subheadline { font-size: 16px; margin-bottom: 20px; }
+
+      /* ── Nav chrome ── */
+      #nav-prev { left: 6px; }
+      #nav-next { right: 46px; }
+      #slide-counter { bottom: 16px; right: 14px; font-size: 11px; }
+      #nav-hint { bottom: 16px; font-size: 10px; }
+      #lang-toggle { top: 10px; right: 10px; }
+
+      /* ── Slide 1: Cover ── */
+      .s1-logo { margin-bottom: 24px; }
+      .s1-logo-img { width: 52px; height: 52px; }
+      .s1-scroll-hint { margin-top: 32px; }
+
+      /* ── Slide 2 ── */
+      .s2-headline { margin-bottom: 20px; }
+      .s2-beliefs { gap: 14px; }
+      .s2-close { margin-top: 24px; }
+
+      /* ── Slide 3: threat framing ── */
+      .threat-grid { grid-template-columns: 1fr; gap: 10px; margin-top: 16px; }
+      .threat-card { min-height: 0; padding: 16px 14px; border-radius: 12px; }
+      .threat-card-label { margin-bottom: 10px; font-size: 9px; }
+      .threat-card-title { font-size: 17px; margin-bottom: 8px; }
+      .threat-card-body { font-size: 13px; }
+      .threat-close { margin-top: 14px; padding: 12px 14px; font-size: 13px; }
+
+      /* ── Slide 4: sector grid ── */
+      .sector-grid { grid-template-columns: repeat(2,1fr); gap: 8px; margin-top: 14px; }
+      .sector-img { height: 88px; }
+      .sector-body { padding: 8px 10px; }
+
+      /* ── Slide 4: problem ── */
+      .problem-grid { margin-top: 18px; gap: 18px; }
+
+      /* ── Slide 5: gap scene ── */
+      .gap-hero-card { margin-top: 10px; padding: 10px; }
+      .gap-hero-card img { width: 100%; border-radius: 10px; }
+      .gap-summary-row { grid-template-columns: 1fr; gap: 8px; margin-top: 8px; }
+      .gap-summary-card { padding: 10px 12px; }
+      .gap-summary-text { font-size: 11px; }
+
+      /* ── Slide 7: hardware clarification ── */
+      .hardware-layout { grid-template-columns: 1fr; gap: 10px; margin-top: 16px; }
+      .hardware-visual { padding: 12px; border-radius: 12px; }
+      .hardware-visual img { height: 180px; border-radius: 10px; object-position: center 42%; }
+      .hardware-callout { padding: 14px 14px; border-radius: 12px; }
+      .hardware-callout-title { font-size: 20px; }
+      .hardware-point { padding: 12px 13px; font-size: 13px; }
+
+      /* ── Slide 8: capabilities ── */
+      #slide-6 .slide-content { max-width: 100%; }
+      #slide-6 .slide-headline { font-size: clamp(24px, 6vw, 36px); margin-bottom: 4px; }
+      #slide-6 .slide-subheadline { font-size: 13px; margin-bottom: 8px; }
+      .s6-side { flex-direction: column; align-items: flex-start; }
+      .s6-hero-card img { width: 70px; height: 70px; }
+      .s6-points { flex-direction: column; gap: 6px; }
+      .cap-grid { grid-template-columns: 1fr 1fr; gap: 7px; }
+      .cap-item { padding: 8px; gap: 8px; }
+      .cap-thumb { width: 36px; height: 36px; }
+      .cap-title { font-size: 11px; }
+      .cap-desc { font-size: 9px; }
+
+      /* ── Slide 7: before/after ── */
+      .split { margin-top: 16px; gap: 10px; }
+      .split-panel { padding: 18px 14px; min-height: auto; }
+      .split-items { gap: 7px; }
+      .split-item { font-size: 13px; }
+
+      /* ── Slide 8: miss the sky ── */
+      .miss-visual { margin-top: 16px; gap: 10px; }
+      .miss-panel { padding: 14px; }
+      .miss-tagline-box { margin-top: 14px; padding: 12px 14px; font-size: 13px; }
+
+      /* ── Slide 9: compare table ── */
+      .compare-table { font-size: 11px; margin-top: 16px; }
+      .compare-table thead tr th { padding: 8px 8px; font-size: 8.5px; letter-spacing: 0.06em; }
+      .compare-table tbody tr td { padding: 10px 8px; }
+      .compare-table tbody tr td:first-child { font-size: 9px; }
+
+      /* ── Slide 10: market ── */
+      #slide-10 .slide-body { display: none; }
+      .market-layout { gap: 10px; margin-top: 16px; }
+      .market-right { gap: 8px; }
+      .market-segment-panel,
+      .market-chart-panel { padding: 14px 12px; border-radius: 12px; }
+      .market-stat-panel { padding: 16px 14px; border-radius: 12px; }
+      .market-stat-inner { gap: 8px; }
+      .market-stat-value { font-size: 36px; }
+      .market-stat-title { font-size: 15px; }
+      .market-stat-copy { font-size: 11px; max-width: none; }
+      .market-sectors { grid-template-columns: 1fr 1fr; gap: 6px; }
+      .market-sector { min-height: 0; padding: 10px 9px; gap: 8px; }
+      .market-sector-icon { width: 28px; height: 28px; border-radius: 8px; }
+      .market-sector-name { font-size: 11px; }
+      .market-chart-title { margin-bottom: 10px; }
+      .market-bars { gap: 8px; }
+      .market-bar-row { grid-template-columns: 38px minmax(0, 1fr) 48px; gap: 8px; }
+      .market-bar-track { height: 24px; }
+      .market-bar-year { width: 38px; font-size: 11px; }
+      .market-bar-val { width: 48px; font-size: 11px; }
+
+      /* ── Slide 11: business model ── */
+      .biz-streams { margin-top: 16px; gap: 10px; }
+      .biz-stream { padding: 16px 14px; }
+      .biz-expansion { margin-top: 14px; padding: 14px 16px; }
+      .biz-expansion-text { font-size: 14px; }
+
+      /* ── Slide 12: traction / tulsa ── */
+      .tulsa-customer-hero { gap: 8px; margin: 8px 0 12px; flex-wrap: wrap; }
+      .tulsa-customer-name { font-size: 17px; }
+      /* Photos: keep 3-col side by side, fixed short height */
+      .tulsa-photos { grid-template-columns: 1fr 1fr 1fr; gap: 6px; margin-bottom: 10px; }
+      .tulsa-photo-img { aspect-ratio: unset; height: 88px; border-radius: 8px; }
+      .tulsa-photo-lbl { font-size: 10px; margin-top: 4px; }
+      .tulsa-price-item { padding: 10px 12px; }
+      .tulsa-price-val { font-size: 20px; }
+      .tulsa-price-mo { font-size: 13px; }
+      .tulsa-price-lbl { font-size: 9px; margin-top: 3px; }
+      .tulsa-price-note { font-size: 9px; }
+
+      /* ── Slide 13: expansion path ── */
+      .expansion-path { margin-top: 24px; }
+      .path-stage { padding: 18px 14px; }
+      .path-key-line { margin-top: 20px; }
+
+      /* ── Slide 14: security stack ── */
+      .sec-stack { margin: 14px 0 0; }
+      .sec-stack-layer { padding: 10px 14px; }
+      .sec-stack-close { margin-top: 12px; font-size: 13px; }
+
+      /* ── Slide 15: acquisition ── */
+      #slide-15 .slide-content { max-width: 100%; }
+      .acq-columns { grid-template-columns: 1fr; gap: 10px; margin-bottom: 14px; }
+      .acq-sub { font-size: 13px; margin-bottom: 14px; }
+      .acq-col { padding: 14px 12px; gap: 8px; }
+      .acq-col-desc { display: none; }
+      .acq-companies { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
+      .acq-co { padding: 6px 8px; gap: 6px; }
+      .acq-co img { width: 18px; height: 18px; }
+      .acq-co-name { font-size: 10px; }
+      .acq-closing { font-size: 13px; }
+      .acq-footer { font-size: 11px; }
+
+      /* ── Slide 18: team ── */
+      #slide-team .slide-headline { font-size: clamp(24px, 6vw, 34px); margin-bottom: 20px !important; }
+      .team-cards { flex-direction: column; gap: 16px; align-items: center; }
+      .team-card { width: 100%; max-width: 340px; padding: 22px 20px; border-radius: 16px; }
+      .team-photo { width: 72px; height: 72px; margin-bottom: 10px; }
+      .team-divider { margin: 10px auto; }
+      .team-creds { gap: 5px; }
+      .team-creds li { font-size: 12px; }
+
+      /* ── Slide 16: CTA ── */
+      #slide-16 { align-items: center; }
+      .s14-headline { font-size: clamp(38px,10vw,56px); }
+      .s14-sub { margin-bottom: 18px; }
+      .s14-demo { margin-top: 14px; }
+      .s14-demo-btn { font-size: 13px; padding: 10px 22px; }
+      .s14-divider { margin: 18px auto; }
+      .s14-contact { font-size: 13px; }
+    }
+
+    @media (max-width: 420px) {
+      .gap-layer-grid { grid-template-columns: 1fr; }
+      .cap-grid { grid-template-columns: 1fr; }
+      .market-sectors { grid-template-columns: 1fr; }
+      .market-stat-value { font-size: 32px; }
+      .market-stat-title { font-size: 14px; }
+      .market-bar-row { grid-template-columns: 34px minmax(0, 1fr) 44px; gap: 6px; }
+      .market-bar-year { width: 34px; font-size: 10px; }
+      .market-bar-val { width: 44px; font-size: 10px; }
+    }
+
+    @media (max-width: 430px) and (max-height: 920px) {
+
+      /* ── Global compact iPhone pass ── */
+      .slide {
+        padding: 42px calc(20px + env(safe-area-inset-right)) 54px calc(20px + env(safe-area-inset-left));
+        overflow-y: auto;
+      }
+      .slide::-webkit-scrollbar { display: none; }
+      .slide-content { max-width: 100%; }
+      .eyebrow {
+        margin-bottom: 8px;
+        font-size: 10px;
+      }
+      .slide-headline {
+        font-size: clamp(28px, 7.2vw, 40px);
+        margin-bottom: 8px;
+        line-height: 1.05;
+        padding-right: 56px;
+      }
+      .slide-subheadline {
+        font-size: 14px;
+        margin-bottom: 12px;
+      }
+      .slide-body {
+        font-size: 13px;
+        line-height: 1.5;
+      }
+
+      /* ── Slide 3: threat framing ── */
+      #slide-2a .slide-headline br { display: none; }
+      #slide-2a .slide-body { max-width: none; }
+      .threat-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        margin-top: 12px;
+      }
+      .threat-card {
+        padding: 12px 12px 11px;
+        min-height: 0;
+        border-radius: 12px;
+      }
+      .threat-card-label {
+        margin-bottom: 6px;
+        font-size: 8px;
+      }
+      .threat-card-title {
+        font-size: 13px;
+        margin-bottom: 5px;
+      }
+      .threat-card-body {
+        font-size: 11px;
+        line-height: 1.42;
+      }
+      .threat-close {
+        margin-top: 10px;
+        padding: 11px 12px;
+        font-size: 12px;
+        line-height: 1.45;
+      }
+
+      /* ── Slide 4: customer ── */
+      #slide-3 .slide-headline { margin-bottom: 6px; }
+      #slide-3 .slide-body { margin-bottom: 0; }
+      .sector-grid {
+        gap: 7px;
+        margin-top: 12px;
+      }
+      .sector-img { height: 70px; }
+      .sector-body {
+        padding: 7px 8px 8px;
+        gap: 3px;
+      }
+      .sector-name { font-size: 11px; }
+      .sector-desc {
+        font-size: 9px;
+        line-height: 1.35;
+      }
+
+      /* ── Slide 5: problem ── */
+      #slide-4 .slide-headline br { display: none; }
+      .problem-grid {
+        grid-template-columns: 1fr 1fr;
+        margin-top: 12px;
+        gap: 10px;
+      }
+      .problem-col-title {
+        margin-bottom: 8px;
+        font-size: 9px;
+      }
+      .problem-items { gap: 6px; }
+      .problem-item {
+        padding: 8px 10px;
+        font-size: 11px;
+        line-height: 1.38;
+      }
+      .problem-item.cost {
+        margin-top: 8px !important;
+        font-size: 12px;
+      }
+      .problem-result {
+        margin-top: 0;
+        padding: 14px 12px;
+        font-size: 12px;
+        line-height: 1.45;
+      }
+
+      /* ── Slide 6: security gap ── */
+      #slide-5 .slide-headline { font-size: clamp(26px, 6.8vw, 36px); }
+      #slide-5 .slide-body br { display: none; }
+      .gap-hero-card {
+        margin-top: 8px;
+        padding: 8px;
+        border-radius: 14px;
+      }
+      .gap-hero-card img {
+        width: 100%;
+        max-height: 206px;
+        object-fit: contain;
+        border-radius: 10px;
+      }
+      .gap-summary-row {
+        grid-template-columns: 1fr 1fr;
+        gap: 6px;
+        margin-top: 8px;
+      }
+      .gap-summary-card { padding: 9px 10px; }
+      .gap-summary-label {
+        margin-bottom: 4px;
+        font-size: 8px;
+      }
+      .gap-summary-text {
+        font-size: 10px;
+        line-height: 1.4;
+      }
+
+      /* ── Slide 7: hardware clarification ── */
+      #slide-5a .slide-headline br { display: none; }
+      .hardware-layout {
+        grid-template-columns: minmax(118px, 0.82fr) minmax(0, 1fr);
+        gap: 8px;
+        margin-top: 12px;
+        align-items: stretch;
+      }
+      .hardware-visual {
+        padding: 8px;
+        border-radius: 12px;
+      }
+      .hardware-visual img {
+        height: 152px;
+        border-radius: 10px;
+      }
+      .hardware-copy { gap: 7px; }
+      .hardware-callout {
+        padding: 11px 12px;
+        border-radius: 12px;
+      }
+      .hardware-callout-title {
+        font-size: 15px;
+        line-height: 1.1;
+      }
+      .hardware-point {
+        padding: 9px 10px;
+        font-size: 11px;
+        line-height: 1.4;
+        border-radius: 10px;
+      }
+
+      /* ── Slide 8: solution ── */
+      #slide-6 .slide-headline {
+        font-size: clamp(22px, 5.5vw, 30px);
+        margin-bottom: 4px;
+      }
+      #slide-6 .slide-subheadline {
+        font-size: 12px;
+        margin-bottom: 6px;
+      }
+      .s6-shell {
+        gap: 8px;
+        margin-top: 4px;
+      }
+      .s6-side { flex-direction: column; gap: 6px; }
+      .s6-hero-card {
+        padding: 8px;
+        border-radius: 10px;
+      }
+      .s6-hero-card img { width: 70px; height: 70px; }
+      .s6-point {
+        padding: 8px 9px;
+        font-size: 10.5px;
+        line-height: 1.35;
+      }
+      .cap-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 6px;
+      }
+      .cap-item {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 6px;
+        padding: 8px 6px;
+        border-radius: 10px;
+      }
+      .cap-thumb {
+        width: 38px;
+        height: 38px;
+        border-radius: 8px;
+      }
+      .cap-body { gap: 0; }
+      .cap-title {
+        font-size: 10px;
+        line-height: 1.2;
+      }
+      .cap-desc { display: none; }
+
+      /* ── Slide 9: before / after ── */
+      #slide-7 .slide-headline br { display: none; }
+      .split {
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        margin-top: 12px;
+      }
+      .split-panel {
+        padding: 12px 11px;
+        border-radius: 12px;
+      }
+      .split-label {
+        margin-bottom: 8px;
+        font-size: 8px;
+      }
+      .split-title {
+        font-size: 13px;
+        margin-bottom: 8px;
+      }
+      .split-items { gap: 5px; }
+      .split-item {
+        gap: 7px;
+        font-size: 11px;
+        line-height: 1.3;
+      }
+      .split-item-dot {
+        width: 6px;
+        height: 6px;
+      }
+
+      /* ── Slide 10: miss the sky ── */
+      #slide-8 .slide-headline br { display: none; }
+      .miss-visual {
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        margin-top: 12px;
+      }
+      .miss-panel {
+        padding: 11px 10px;
+        border-radius: 12px;
+      }
+      .miss-panel-title {
+        margin-bottom: 8px;
+        font-size: 8px;
+      }
+      .miss-items { gap: 6px; }
+      .miss-item {
+        gap: 7px;
+        font-size: 11px;
+        line-height: 1.3;
+      }
+      .miss-tagline-box {
+        margin-top: 10px;
+        padding: 10px 12px;
+        font-size: 12px;
+        line-height: 1.35;
+      }
+
+      /* ── Slide 11: comparison table ── */
+      .compare-table {
+        margin-top: 12px;
+        font-size: 10px;
+      }
+      .compare-table thead tr th {
+        padding: 7px 6px;
+        font-size: 7.5px;
+      }
+      .compare-table tbody tr td {
+        padding: 8px 6px;
+        font-size: 10px;
+      }
+      .compare-table tbody tr td:first-child {
+        font-size: 8px;
+        letter-spacing: 0.04em;
+      }
+
+      /* ── Slide 12: market ── */
+      #slide-10 .slide-headline { margin-bottom: 6px; }
+      .market-layout {
+        grid-template-columns: minmax(110px, 0.56fr) minmax(0, 1fr);
+        gap: 8px;
+        margin-top: 12px;
+      }
+      .market-right { gap: 6px; }
+      .market-stat-panel,
+      .market-segment-panel,
+      .market-chart-panel {
+        padding: 11px 10px;
+        border-radius: 12px;
+      }
+      .market-stat-inner { gap: 6px; }
+      .market-stat-kicker { font-size: 8px; }
+      .market-stat-value { font-size: 28px; }
+      .market-stat-title {
+        font-size: 12px;
+        line-height: 1.15;
+      }
+      .market-stat-copy {
+        font-size: 10px;
+        line-height: 1.35;
+      }
+      .market-chart-title {
+        margin-bottom: 8px;
+        font-size: 8px;
+      }
+      .market-sectors {
+        grid-template-columns: 1fr 1fr;
+        gap: 5px;
+      }
+      .market-sector {
+        gap: 7px;
+        padding: 8px 7px;
+        border-radius: 10px;
+      }
+      .market-sector-icon {
+        width: 24px;
+        height: 24px;
+        border-radius: 7px;
+      }
+      .market-sector-name {
+        font-size: 9.5px;
+        line-height: 1.2;
+      }
+      .market-bars { gap: 6px; }
+      .market-bar-row {
+        grid-template-columns: 30px minmax(0, 1fr) 38px;
+        gap: 5px;
+      }
+      .market-bar-year {
+        width: 30px;
+        font-size: 9px;
+      }
+      .market-bar-track { height: 18px; }
+      .market-bar-val {
+        width: 38px;
+        font-size: 9px;
+      }
+
+      /* ── Slide 13: business model ── */
+      #slide-11 .slide-headline br { display: none; }
+      .biz-streams {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 6px;
+        margin-top: 12px;
+      }
+      .biz-stream {
+        padding: 10px 8px;
+        border-radius: 10px;
+      }
+      .biz-stream-num {
+        margin-bottom: 7px;
+        font-size: 8px;
+      }
+      .biz-stream-title {
+        font-size: 12px;
+        margin-bottom: 5px;
+        line-height: 1.2;
+      }
+      .biz-stream-desc {
+        font-size: 9px;
+        line-height: 1.35;
+      }
+      .biz-expansion {
+        margin-top: 8px;
+        padding: 10px 12px;
+        border-radius: 10px;
+      }
+      .biz-expansion-label {
+        margin-bottom: 4px;
+        font-size: 8px;
+      }
+      .biz-expansion-text {
+        font-size: 11px;
+        line-height: 1.35;
+      }
+
+      /* ── Slide 16: security stack ── */
+      #slide-14 .slide-headline br { display: none; }
+      .sec-stack {
+        margin-top: 12px;
+        max-width: 100%;
+      }
+      .sec-stack-layer {
+        gap: 10px;
+        padding: 8px 11px;
+        font-size: 11px;
+      }
+      .sec-stack-layer.gargoyle {
+        padding: 11px 11px;
+      }
+      .ssl-num {
+        min-width: 18px;
+        font-size: 8px;
+      }
+      .sec-stack-sep {
+        padding: 7px 11px;
+        font-size: 8px;
+      }
+      .sec-stack-badge {
+        font-size: 8px;
+        padding: 2px 7px;
+      }
+      .sec-stack-close {
+        margin-top: 8px;
+        font-size: 11px;
+        line-height: 1.4;
+      }
+
+      /* ── Slide 17: acquisition ── */
+      #slide-15 .slide-headline { margin-bottom: 6px; }
+      .acq-sub {
+        margin-bottom: 10px;
+        font-size: 11px;
+        line-height: 1.35;
+      }
+      .acq-columns {
+        grid-template-columns: 1fr;
+        gap: 8px;
+        margin-bottom: 8px;
+      }
+      .acq-col {
+        padding: 10px 10px;
+        gap: 6px;
+        border-radius: 12px;
+      }
+      .acq-col-title {
+        padding-bottom: 7px;
+        font-size: 9px;
+      }
+      .acq-companies {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 4px;
+      }
+      .acq-co {
+        padding: 5px 7px;
+        gap: 6px;
+      }
+      .acq-co img {
+        width: 16px;
+        height: 16px;
+      }
+      .acq-co-name {
+        font-size: 9px;
+        line-height: 1.2;
+      }
+      .acq-col-desc,
+      .acq-footer { display: none; }
+      .acq-closing {
+        font-size: 11px;
+        line-height: 1.35;
+      }
+
+      /* ── Slide 18: team compact ── */
+      #slide-team .slide-headline { font-size: clamp(22px, 5.5vw, 30px); margin-bottom: 16px !important; }
+      .team-card { padding: 18px 16px; }
+      .team-photo { width: 60px; height: 60px; }
+      .team-creds li { font-size: 11px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Progress Bar ── -->
+<div id="progress-bar"></div>
+
+<!-- ────────────────────────────────────────────
+     EMAIL GATE
+──────────────────────────────────────────── -->
+<div id="email-gate">
+  <!-- Netlify hidden form for form detection -->
+  <form method='POST' name='investor-access' style='position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;'>
+    <input type="hidden" name="form-name" value="investor-access" />
+    <input type="email" name="email" />
+    <input name="bot-field" />
+    <button type="submit">Submit</button>
+  </form>
+
+  <div class="gate-inner">
+    <div class="gate-logo">
+      <img src="/gargoyle.png" class="gate-logo-icon" alt="Gargoyle Systems" />
+      <span class="gate-logo-text">GARGOYLE SYSTEMS</span>
+    </div>
+
+    <p class="gate-eyebrow" data-i18n="gate-eyebrow">Investor Access</p>
+    <h1 class="gate-headline" data-i18n="gate-headline">Access the Gargoyle Systems<br>Investor Brief</h1>
+    <p class="gate-sub" data-i18n="gate-sub">Gargoyle Systems is building the infrastructure that secures the airspace above critical assets.<br>Enter your email to view the full investor presentation.</p>
+
+    <form class="gate-form" id="gate-form" novalidate>
+      <input type="hidden" name="form-name" value="investor-access" />
+      <input type="email" class="gate-input" id="gate-email" name="email"
+        placeholder="your@email.com" autocomplete="email" required />
+      <input type="hidden" name="bot-field" id="bot-field" />
+      <button type="submit" class="gate-btn" id="gate-btn" data-i18n="gate-btn">View Presentation →</button>
+    </form>
+    <p class="gate-privacy" data-i18n="gate-privacy">No spam. Used only to track investor interest.</p>
+  </div>
+</div>
+
+<!-- ────────────────────────────────────────────
+     DECK
+──────────────────────────────────────────── -->
+<div id="deck">
+
+  <!-- ── SLIDE 1: TITLE ── -->
+  <div class="slide" id="slide-1" data-slide="1">
+    <canvas id="radar-canvas"></canvas>
+
+    <div class="glow glow-blue" style="width:600px;height:600px;top:-100px;right:-100px;"></div>
+    <div class="glow glow-green" style="width:400px;height:400px;bottom:-80px;left:-60px;"></div>
+
+    <div class="slide-content s1-content">
+      <div class="s1-logo anim anim-1">
+        <img src="/gargoyle.png" class="s1-logo-img" alt="Gargoyle Systems" />
+      </div>
+      <h1 class="s1-headline anim anim-2">Gargoyle Systems</h1>
+      <p class="s1-sub anim anim-3" data-i18n="s1-sub">Managed Airspace Security Infrastructure</p>
+      <p class="s1-tagline anim anim-4" data-i18n="s1-tagline">Protecting the airspace above critical assets.</p>
+      <div class="s1-scroll-hint anim anim-5">
+        <div class="s1-scroll-hint-dot"></div>
+        <span data-i18n="s1-hint">Click or press ↓ to advance</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SLIDE 2: THIS MAY NOT BE FOR YOU ── -->
+  <div class="slide" id="slide-2" data-slide="2">
+    <div class="glow glow-blue" style="width:500px;height:500px;top:50%;left:50%;transform:translate(-50%,-50%);opacity:0.07;"></div>
+    <div class="slide-content s2-content">
+      <span class="eyebrow anim anim-1" data-i18n="s2-eyebrow">A word first</span>
+      <h2 class="s2-headline anim anim-2" data-i18n="s2-headline">This May Not<br>Be For You</h2>
+      <div class="divider anim anim-3"></div>
+      <p class="slide-body anim anim-3" style="margin-bottom:28px;" data-i18n="s2-intro">If you do <strong>not</strong> believe that:</p>
+      <ul class="s2-beliefs anim anim-4">
+        <li data-i18n="s2-belief1"><strong>Drones will become common in everyday airspace</strong></li>
+        <li data-i18n="s2-belief2"><strong>Drone-enabled security threats will increase</strong></li>
+        <li data-i18n="s2-belief3"><strong>AI will accelerate drone deployment at massive scale</strong></li>
+      </ul>
+      <p class="s2-close anim anim-5" data-i18n="s2-close">…then this opportunity probably isn't a fit.</p>
+    </div>
+  </div>
+
+  <!-- ── SLIDE 3: SMALL DRONE THREAT ── -->
+  <div class="slide" id="slide-2a" data-slide="3">
+    <div class="slide-content">
+      <span class="eyebrow anim anim-1" data-i18n="s3p-eyebrow">The Threat</span>
+      <h2 class="slide-headline anim anim-2" data-i18n="s3p-headline">Small-Class Drones <br>Change the Threat Model</h2>
+      <p class="slide-body threat-intro anim anim-3" data-i18n="s3p-body">Cheap, quiet drones give bad actors an eye in the sky, a delivery path over the fence, and reconnaissance without ever touching the ground perimeter.</p>
+
+      <div class="threat-grid anim anim-4">
+        <div class="threat-card">
+          <span class="threat-card-label" data-i18n="s3p-card1-label">Robbery Support</span>
+          <div class="threat-card-title" data-i18n="s3p-card1-title">Real-Time Eye in the Sky</div>
+          <p class="threat-card-body" data-i18n="s3p-card1-body">Crews can scout entry points, watch guard patterns, and coordinate break-ins with live overhead visibility.</p>
+        </div>
+        <div class="threat-card">
+          <span class="threat-card-label" data-i18n="s3p-card2-label">Corporate Espionage</span>
+          <div class="threat-card-title" data-i18n="s3p-card2-title">Reconnaissance Without Access</div>
+          <p class="threat-card-body" data-i18n="s3p-card2-body">Low-cost drones can observe yards, loading docks, prototypes, and executive movement without breaching a gate.</p>
+        </div>
+        <div class="threat-card">
+          <span class="threat-card-label" data-i18n="s3p-card3-label">Payload Delivery</span>
+          <div class="threat-card-title" data-i18n="s3p-card3-title">Carry Contraband or Devices</div>
+          <p class="threat-card-body" data-i18n="s3p-card3-body">Even small drones can drop phones, narcotics, sensors, or malicious hardware onto otherwise secured property.</p>
+        </div>
+        <div class="threat-card">
+          <span class="threat-card-label" data-i18n="s3p-card4-label">Executive & Event Risk</span>
+          <div class="threat-card-title" data-i18n="s3p-card4-title">Stalking, Disruption, and Panic</div>
+          <p class="threat-card-body" data-i18n="s3p-card4-body">At campuses, residences, or venues, a drone can surveil VIPs, disrupt operations, or trigger high-visibility security incidents.</p>
+        </div>
+      </div>
+
+      <div class="threat-close anim anim-5" data-i18n="s3p-close">The problem is not that the fence is broken. The problem is that the threat never needs to use the gate.</div>
+    </div>
+  </div>
+
+  <!-- ── SLIDE 4: WHO SECURES THE AIRSPACE ── -->
+  <div class="slide" id="slide-3" data-slide="4">
+    <div class="slide-content">
+      <span class="eyebrow anim anim-1" data-i18n="s3-eyebrow">The Customer</span>
+      <h2 class="slide-headline anim anim-2" data-i18n="s3-headline">Who Secures the Airspace?</h2>
+      <p class="slide-body anim anim-3" data-i18n="s3-body">The same organizations that protect the ground.</p>
+      <div class="sector-grid anim anim-4">
+
+        <div class="sector-item">
+          <div class="sector-img"><img src="/slide3/corp.png" alt="Corporate Security" /></div>
+          <div class="sector-body">
+            <div class="sector-name" data-i18n="s3-corp-name">Corporate Security</div>
+            <div class="sector-desc" data-i18n="s3-corp-desc">Enterprise campuses protecting data centers, HQs, and operations</div>
+          </div>
+        </div>
+
+        <div class="sector-item">
+          <div class="sector-img"><img src="/slide3/private.png" alt="Private Security Firms" /></div>
+          <div class="sector-body">
+            <div class="sector-name" data-i18n="s3-priv-name">Private Security Firms</div>
+            <div class="sector-desc" data-i18n="s3-priv-desc">Managed security providers expanding their service portfolio</div>
+          </div>
+        </div>
+
+        <div class="sector-item">
+          <div class="sector-img"><img src="/slide3/exec.png" alt="Executive Protection" /></div>
+          <div class="sector-body">
+            <div class="sector-name" data-i18n="s3-exec-name">Executive Protection</div>
+            <div class="sector-desc" data-i18n="s3-exec-desc">High-net-worth individual and executive site security</div>
+          </div>
+        </div>
+
+        <div class="sector-item">
+          <div class="sector-img"><img src="/slide3/events.png" alt="Event Security" /></div>
+          <div class="sector-body">
+            <div class="sector-name" data-i18n="s3-evnt-name">Event Security</div>
+            <div class="sector-desc" data-i18n="s3-evnt-desc">Stadiums, concert venues, and large-scale public events</div>
+          </div>
+        </div>
+
+        <div class="sector-item">
+          <div class="sector-img"><img src="/slide3/infra.png" alt="Critical Infrastructure" /></div>
+          <div class="sector-body">
+            <div class="sector-name" data-i18n="s3-infr-name">Critical Infrastructure</div>
+            <div class="sector-desc" data-i18n="s3-infr-desc">Power plants, utilities, water treatment, and industrial sites</div>
+          </div>
+        </div>
+
+        <div class="sector-item">
+          <div class="sector-img"><img src="/slide3/unis.png" alt="Universities & Research" /></div>
+          <div class="sector-body">
+            <div class="sector-name" data-i18n="s3-unis-name">Universities &amp; Research</div>
+            <div class="sector-desc" data-i18n="s3-unis-desc">Campus security teams protecting sensitive facilities</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SLIDE 4: THE PROBLEM ── -->
+  <div class="slide" id="slide-4" data-slide="5">
+    <div class="slide-content">
+      <span class="eyebrow anim anim-1" data-i18n="s4-eyebrow">The Problem</span>
+      <h2 class="slide-headline anim anim-2" data-i18n="s4-headline">Counter-Drone Was <br>Built for the Military</h2>
+      <p class="slide-body anim anim-3" data-i18n="s4-body">Not for businesses.</p>
+      <div class="problem-grid anim anim-4">
+        <div>
+          <p class="problem-col-title military" data-i18n="s4-col1-title">Typical Solutions</p>
+          <div class="problem-items">
+            <div class="problem-item bad" data-i18n="s4-bad1">Radar-based counter-UAS systems</div>
+            <div class="problem-item bad" data-i18n="s4-bad2">RF jamming systems</div>
+            <div class="problem-item bad" data-i18n="s4-bad3">Government defense installations</div>
+            <div class="problem-item bad" data-i18n="s4-bad4">Specialized military operators required</div>
+          </div>
+          <div class="problem-item cost" style="margin-top:12px;" data-i18n="s4-cost">$100,000 – $1,000,000 per site</div>
+        </div>
+        <div>
+          <p class="problem-col-title gargoyle" data-i18n="s4-col2-title">The Result</p>
+          <div class="problem-result" data-i18n="s4-result">
+            Most businesses have <strong>zero drone protection.</strong><br><br>
+            The technology exists — but it was never designed for commercial deployment at commercial prices.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SLIDE 5: THE SECURITY GAP ── -->
+  <div class="slide" id="slide-5" data-slide="6">
+    <div class="slide-content">
+      <span class="eyebrow anim anim-1" data-i18n="s5-eyebrow">ギャップ</span>
+      <h2 class="slide-headline anim anim-2" data-i18n="s5-headline">従来の警備は屋根の高さで終わる</h2>
+      <p class="slide-body anim anim-2" data-i18n="s5-body">カメラ、アラーム、アクセス制御、外周警備は地上を守ります。<br>しかしその上の空域は、依然として抜け落ちたレイヤーです。</p>
+
+      <div class="gap-hero-card anim anim-3">
+        <img src="/slide5image.png" alt="Traditional security compared with Gargoyle airspace security" />
+        <div class="gap-summary-row">
+          <div class="gap-summary-card good">
+            <span class="gap-summary-label">既存の警備で守れている領域</span>
+            <p class="gap-summary-text"><strong>外周、出入口、地上オペレーション</strong> は、企業が既に導入・運用している警備ツールでカバーされています。</p>
+          </div>
+          <div class="gap-summary-card alert">
+            <span class="gap-summary-label">なお見えていない領域</span>
+            <p class="gap-summary-text">空域の可視化がなければ、チームは屋根の上にある<strong>ドローンによる監視、物資投下、侵入リスク</strong>を把握できません。</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── SLIDE 7: WHAT GARGOYLE DEPLOYS ── -->
+  <div class="slide" id="slide-5a" data-slide="7">
+    <div class="slide-content">
+      <span class="eyebrow anim anim-1" data-i18n="s6a-eyebrow">Clarification</span>
+      <h2 class="slide-headline anim anim-2" data-i18n="s6a-headline">We Deploy Sensors. <br>We Do Not Patrol With Drones.</h2>
+      <p class="slide-body anim anim-3" data-i18n="s6a-body">Gargoyle installs fixed hardware on the site that detects and classifies drones entering protected airspace.</p>
+
+      <div class="hardware-layout anim anim-4">
+        <div class="hardware-visual">
+          <img src="/gargoyle_unit.png" alt="Gargoyle detection unit hardware" />
+        </div>
+        <div class="hardware-copy">
+          <div class="hardware-callout">
+            <span class="hardware-callout-label" data-i18n="s6a-callout-label">What It Is</span>
+            <div class="hardware-callout-title" data-i18n="s6a-callout-title">Installed detection infrastructure for the sky</div>
+          </div>
+          <div class="hardware-point" data-i18n="s6a-point1"><strong>Mounted on buildings and perimeter positions,</strong> not flown overhead like a patrol drone.</div>
+          <div class="hardware-point" data-i18n="s6a-point2"><strong>Continuously detects and classifies nearby aircraft,</strong> then sends alerts into the existing security workflow.</div>
+          <div class="hardware-point" data-i18n="s6a-point3"><strong>Works like security infrastructure,</strong> not like another flying fleet your team has to operate.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SLIDE 8: GARGOYLE CAPABILITIES ── -->
+  <div class="slide" id="slide-6" data-slide="8">
+    <div class="slide-content">
+
+      <span class="eyebrow anim anim-1" data-i18n="s6-eyebrow">The Solution</span>
+      <h2 class="slide-headline anim anim-2" data-i18n="s6-headline">Gargoyle</h2>
+      <p class="slide-subheadline anim anim-2" data-i18n="s6-sub">Fixed airspace detection for commercial security teams.</p>
+
+      <div class="s6-shell anim anim-3">
+        <div class="s6-side">
+          <div class="s6-hero-card">
+            <img src="/cap_hero.png" alt="Gargoyle airspace detection" />
+          </div>
+          <div class="s6-points">
+            <div class="s6-point" data-i18n="s6-point1"><strong>Installed at the site,</strong> not flown as a patrol drone.</div>
+            <div class="s6-point" data-i18n="s6-point2"><strong>Built for security operations,</strong> with alerts that fit existing workflows.</div>
+          </div>
+        </div>
+        <div class="cap-grid anim anim-4">
+          <div class="cap-item">
+            <div class="cap-thumb"><img src="/cap_sensor.png" alt="Perimeter Sensor Deployment" /></div>
+            <div class="cap-body">
+              <div class="cap-title" data-i18n="s6-cap1-title">Sensor Deployment</div>
+              <div class="cap-desc" data-i18n="s6-cap1-desc">Install detection nodes around the facility perimeter.</div>
+            </div>
+          </div>
+          <div class="cap-item">
+            <div class="cap-thumb"><img src="/drone_detection.png" alt="Drone Detection" /></div>
+            <div class="cap-body">
+              <div class="cap-title" data-i18n="s6-cap2-title">Drone Detection</div>
+              <div class="cap-desc" data-i18n="s6-cap2-desc">Flag drones entering protected airspace within seconds.</div>
+            </div>
+          </div>
+          <div class="cap-item">
+            <div class="cap-thumb"><img src="/cap_classify.png" alt="Flight Classification" /></div>
+            <div class="cap-body">
+              <div class="cap-title" data-i18n="s6-cap3-title">Flight Classification</div>
+              <div class="cap-desc" data-i18n="s6-cap3-desc">Separate authorized flights from unknown threats.</div>
+            </div>
+          </div>
+          <div class="cap-item">
+            <div class="cap-thumb"><img src="/cap_integration.png" alt="Security Stack Integration" /></div>
+            <div class="cap-body">
+              <div class="cap-title" data-i18n="s6-cap4-title">Security Integration</div>
+              <div class="cap-desc" data-i18n="s6-cap4-desc">Feed alerts into existing security systems and workflows.</div>
+            </div>
+          </div>
+          <div class="cap-item">
+            <div class="cap-thumb"><img src="/cap_alert.png" alt="Instant Alerting" /></div>
+            <div class="cap-body">
+              <div class="cap-title" data-i18n="s6-cap5-title">Instant Alerting</div>
+              <div class="cap-desc" data-i18n="s6-cap5-desc">Notify the team the moment an unauthorized flight appears.</div>
+            </div>
+          </div>
+          <div class="cap-item">
+            <div class="cap-thumb"><img src="/cap_ops.png" alt="Managed Operations" /></div>
+            <div class="cap-body">
+              <div class="cap-title" data-i18n="s6-cap6-title">Managed Monitoring</div>
+              <div class="cap-desc" data-i18n="s6-cap6-desc">24/7 coverage without building in-house drone expertise.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SLIDE 7: BEFORE / AFTER ── -->
+  <div class="slide" id="slide-7" data-slide="9">
+    <div class="slide-content">
+      <span class="eyebrow anim anim-1" data-i18n="s7-eyebrow">Coverage</span>
+      <h2 class="slide-headline anim anim-2" data-i18n="s7-headline">From Blind Spot <br>to Full Coverage</h2>
+      <div class="split anim anim-3">
+        <div class="split-panel before">
+          <p class="split-label before" data-i18n="s7-before-label">Before Gargoyle</p>
+          <p class="split-title" data-i18n="s7-before-title">Ground Security Only</p>
+          <div class="split-items">
+            <div class="split-item" data-i18n="s7-b1"><div class="split-item-dot good"></div>Ground perimeter monitored</div>
+            <div class="split-item" data-i18n="s7-b2"><div class="split-item-dot good"></div>Access points secured</div>
+            <div class="split-item" data-i18n="s7-b3"><div class="split-item-dot good"></div>Cameras and alarms active</div>
+            <div class="split-item" data-i18n="s7-b4"><div class="split-item-dot bad"></div>Airspace: <strong style="color:#dc2626">completely blind</strong></div>
+            <div class="split-item" data-i18n="s7-b5"><div class="split-item-dot bad"></div>Drone surveillance: <strong style="color:#dc2626">undetectable</strong></div>
+            <div class="split-item" data-i18n="s7-b6"><div class="split-item-dot bad"></div>Payload delivery: <strong style="color:#dc2626">no alert</strong></div>
+          </div>
+        </div>
+        <div class="split-panel after">
+          <p class="split-label after" data-i18n="s7-after-label">After Gargoyle</p>
+          <p class="split-title" data-i18n="s7-after-title">Ground + Airspace<br>Full Coverage</p>
+          <div class="split-items">
+            <div class="split-item" data-i18n="s7-a1"><div class="split-item-dot good"></div>Ground perimeter monitored</div>
+            <div class="split-item" data-i18n="s7-a2"><div class="split-item-dot good"></div>Access points secured</div>
+            <div class="split-item" data-i18n="s7-a3"><div class="split-item-dot good"></div>Cameras and alarms active</div>
+            <div class="split-item" data-i18n="s7-a4"><div class="split-item-dot good"></div>Airspace: <strong style="color:#059669">real-time detection</strong></div>
+            <div class="split-item" data-i18n="s7-a5"><div class="split-item-dot good"></div>Drone tracking: <strong style="color:#059669">instant classification</strong></div>
+            <div class="split-item" data-i18n="s7-a6"><div class="split-item-dot good"></div>Unauthorized flight: <strong style="color:#059669">immediate alert</strong></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SLIDE 8: EVERY SECURITY MISSES THE SKY ── -->
+  <div class="slide" id="slide-8" data-slide="10">
+    <div class="slide-content">
+      <span class="eyebrow anim anim-1" data-i18n="s8-eyebrow">The Insight</span>
+      <h2 class="slide-headline anim anim-2" data-i18n="s8-headline">Every Security System <br>Misses the Sky</h2>
+      <div class="miss-visual anim anim-3">
+        <div class="miss-panel">
+          <div class="miss-panel-title protected" data-i18n="s8-panel1-title">Ground: Fully Protected</div>
+          <div class="miss-items">
+            <div class="miss-item" data-i18n="s8-g1"><span class="miss-check">✓</span>Video surveillance</div>
+            <div class="miss-item" data-i18n="s8-g2"><span class="miss-check">✓</span>Intrusion detection</div>
+            <div class="miss-item" data-i18n="s8-g3"><span class="miss-check">✓</span>Access control</div>
+            <div class="miss-item" data-i18n="s8-g4"><span class="miss-check">✓</span>Perimeter fencing</div>
+            <div class="miss-item" data-i18n="s8-g5"><span class="miss-check">✓</span>Guard patrols</div>
+          </div>
+        </div>
+        <div class="miss-panel">
+          <div class="miss-panel-title exposed" data-i18n="s8-panel2-title">Airspace: Fully Exposed</div>
+          <div class="miss-items">
+            <div class="miss-item" data-i18n="s8-a1"><span class="miss-x">✗</span>Aerial surveillance detection</div>
+            <div class="miss-item" data-i18n="s8-a2"><span class="miss-x">✗</span>Drone tracking</div>
+            <div class="miss-item" data-i18n="s8-a3"><span class="miss-x">✗</span>Payload monitoring</div>
+            <div class="miss-item" data-i18n="s8-a4"><span class="miss-x">✗</span>Flight classification</div>
+            <div class="miss-item" data-i18n="s8-a5"><span class="miss-x">✗</span>Airspace alerting</div>
+          </div>
+        </div>
+      </div>
+      <div class="miss-tagline-box anim anim-4" data-i18n="s8-tagline">
+        <span>Ground security is standard.</span> &nbsp;Airspace security is next.
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SLIDE 9: WHY GARGOYLE WINS ── -->
+  <div class="slide" id="slide-9" data-slide="11">
+    <div class="slide-content">
+      <span class="eyebrow anim anim-1" data-i18n="s9-eyebrow">Competitive Position</span>
+      <h2 class="slide-headline anim anim-2" data-i18n="s9-headline">Why Gargoyle Wins</h2>
+      <div class="anim anim-3" style="overflow-x:auto;">
+        <table class="compare-table">
+          <thead>
+            <tr>
+              <th></th>
+              <th data-i18n="s9-col-mil">Military Systems</th>
+              <th class="col-gargoyle gargoyle-header-cell">Gargoyle</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td data-i18n="s9-row1">Customer</td>
+              <td class="col-military" data-i18n="s9-mil1">Defense / Government agencies</td>
+              <td class="col-gargoyle" data-i18n="s9-gar1">Enterprise security teams</td>
+            </tr>
+            <tr>
+              <td data-i18n="s9-row2">Cost</td>
+              <td class="col-military" data-i18n="s9-mil2">$100k – $1M+ per site</td>
+              <td class="col-gargoyle" data-i18n="s9-gar2">Accessible — subscription model</td>
+            </tr>
+            <tr>
+              <td data-i18n="s9-row3">Deployment</td>
+              <td class="col-military" data-i18n="s9-mil3">Complex, months-long</td>
+              <td class="col-gargoyle" data-i18n="s9-gar3">Fast install, days not months</td>
+            </tr>
+            <tr>
+              <td data-i18n="s9-row4">Operations</td>
+              <td class="col-military" data-i18n="s9-mil4">Specialized military operators</td>
+              <td class="col-gargoyle" data-i18n="s9-gar4">Existing security teams</td>
+            </tr>
+            <tr>
+              <td data-i18n="s9-row5">Business Model</td>
+              <td class="col-military" data-i18n="s9-mil5">Hardware sale, one-time</td>
+              <td class="col-gargoyle" data-i18n="s9-gar5">Recurring managed service</td>
+            </tr>
+            <tr>
+              <td data-i18n="s9-row6">Integration</td>
+              <td class="col-military" data-i18n="s9-mil6">Standalone, siloed</td>
+              <td class="col-gargoyle" data-i18n="s9-gar6">Native security stack integration</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SLIDE 10: MARKET OPPORTUNITY ── -->
+  <div class="slide" id="slide-10" data-slide="12">
+    <div class="slide-content">
+      <span class="eyebrow anim anim-1" data-i18n="s10-eyebrow">市場</span>
+      <h2 class="slide-headline anim anim-2" data-i18n="s10-headline">市場規模</h2>
+      <p class="slide-body anim anim-2" data-i18n="s10-body">ドローンの普及に伴い、ドローン検知市場は急速に拡大しています。保護対象となるあらゆる施設が、空域監視の潜在顧客です。</p>
+      <div class="market-layout anim anim-3">
+        <div class="market-stat-panel">
+          <div class="market-stat-inner">
+            <span class="market-stat-kicker">予測市場規模</span>
+            <div class="market-stat-value">約2.7兆円</div>
+            <div class="market-stat-title">2030年の世界ドローン検知市場</div>
+            <p class="market-stat-copy">ドローン活動の増加と、企業セキュリティチームからの需要拡大により急成長しているカテゴリです。</p>
+          </div>
+        </div>
+        <div class="market-right">
+          <div class="market-segment-panel">
+            <p class="market-chart-title" data-i18n="s10-chart1-title">主要な導入セグメント</p>
+            <div class="market-sectors">
+              <div class="market-sector"><span class="market-sector-icon"><img src="/market_campus.svg" alt="Corporate Campuses" /></span><span class="market-sector-name" data-i18n="s10-seg1">企業キャンパス</span></div>
+              <div class="market-sector"><span class="market-sector-icon"><img src="/market_stadium.svg" alt="Stadiums and Venues" /></span><span class="market-sector-name" data-i18n="s10-seg2">スタジアム・会場</span></div>
+              <div class="market-sector"><span class="market-sector-icon"><img src="/market_datacenter.svg" alt="Data Centers" /></span><span class="market-sector-name" data-i18n="s10-seg3">データセンター</span></div>
+              <div class="market-sector"><span class="market-sector-icon"><img src="/market_industrial.svg" alt="Industrial Facilities" /></span><span class="market-sector-name" data-i18n="s10-seg4">産業施設</span></div>
+              <div class="market-sector"><span class="market-sector-icon"><img src="/market_logistics.svg" alt="Logistics Hubs" /></span><span class="market-sector-name" data-i18n="s10-seg5">物流ハブ</span></div>
+              <div class="market-sector"><span class="market-sector-icon"><img src="/market_university.svg" alt="Universities" /></span><span class="market-sector-name" data-i18n="s10-seg6">大学</span></div>
+            </div>
+          </div>
+          <div class="market-chart-panel">
+            <p class="market-chart-title" data-i18n="s10-chart2-title">ドローン検知市場の成長予測</p>
+            <div class="market-bars" id="market-bars">
+              <div class="market-bar-row">
+                <span class="market-bar-year">2023</span>
+                <div class="market-bar-track"><div class="market-bar-fill" style="width:0%" data-width="22%"></div></div>
+                <span class="market-bar-val">約3,200億円</span>
+              </div>
+              <div class="market-bar-row">
+                <span class="market-bar-year">2024</span>
+                <div class="market-bar-track"><div class="market-bar-fill" style="width:0%" data-width="32%"></div></div>
+                <span class="market-bar-val">約5,100億円</span>
+              </div>
+              <div class="market-bar-row">
+                <span class="market-bar-year">2025</span>
+                <div class="market-bar-track"><div class="market-bar-fill" style="width:0%" data-width="44%"></div></div>
+                <span class="market-bar-val">約7,700億円</span>
+              </div>
+              <div class="market-bar-row">
+                <span class="market-bar-year">2026</span>
+                <div class="market-bar-track"><div class="market-bar-fill" style="width:0%" data-width="58%"></div></div>
+                <span class="market-bar-val">約1.1兆円</span>
+              </div>
+              <div class="market-bar-row">
+                <span class="market-bar-year">2028</span>
+                <div class="market-bar-track"><div class="market-bar-fill" style="width:0%" data-width="78%"></div></div>
+                <span class="market-bar-val">約1.8兆円</span>
+              </div>
+              <div class="market-bar-row">
+                <span class="market-bar-year">2030</span>
+                <div class="market-bar-track"><div class="market-bar-fill" style="width:0%" data-width="100%"></div></div>
+                <span class="market-bar-val">約2.7兆円</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SLIDE 11: BUSINESS MODEL ── -->
+  <div class="slide" id="slide-11" data-slide="13">
+    <div class="slide-content">
+      <span class="eyebrow anim anim-1" data-i18n="s11-eyebrow">Business Model</span>
+      <h2 class="slide-headline anim anim-2" data-i18n="s11-headline">Recurring Per-Site <br>Security Service</h2>
+      <div class="biz-streams anim anim-3">
+        <div class="biz-stream">
+          <div class="biz-stream-num" data-i18n="s11-s1num">Stream 01</div>
+          <div class="biz-stream-title" data-i18n="s11-s1title">Sensor Deployment</div>
+          <div class="biz-stream-desc" data-i18n="s11-s1desc">Hardware placement and installation across the facility perimeter. One-time setup fee per site.</div>
+        </div>
+        <div class="biz-stream">
+          <div class="biz-stream-num" data-i18n="s11-s2num">Stream 02</div>
+          <div class="biz-stream-title" data-i18n="s11-s2title">SaaS Platform</div>
+          <div class="biz-stream-desc" data-i18n="s11-s2desc">Cloud-based airspace monitoring dashboard, alerting, and analytics. Per-site monthly subscription.</div>
+        </div>
+        <div class="biz-stream">
+          <div class="biz-stream-num" data-i18n="s11-s3num">Stream 03</div>
+          <div class="biz-stream-title" data-i18n="s11-s3title">Managed Service</div>
+          <div class="biz-stream-desc" data-i18n="s11-s3desc">24/7 SOC monitoring, threat response, and reporting — as a fully managed recurring service.</div>
+        </div>
+      </div>
+      <div class="biz-expansion anim anim-4">
+        <div class="biz-expansion-label" data-i18n="s11-expand-label">Land &amp; Expand</div>
+        <div class="biz-expansion-text" data-i18n="s11-expand-text">Land one facility → expand across the entire property portfolio.<br>One security director relationship unlocks dozens of sites.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SLIDE 12: FIRST PAYING CUSTOMER ── -->
+  <div class="slide" id="slide-12" data-slide="14">
+    <div class="slide-content">
+      <span class="eyebrow anim anim-1">トラクション</span>
+      <h2 class="slide-headline anim anim-2">初の有料導入顧客</h2>
+
+      <div class="tulsa-customer-hero anim anim-2">
+        <img class="tulsa-logo-img" src="https://www.google.com/s2/favicons?domain=utulsa.edu&sz=64" alt="University of Tulsa" />
+        <span class="tulsa-customer-name">タルサ大学</span>
+        <span class="tulsa-customer-tag">有料顧客</span>
+        <span class="tulsa-customer-date">2026年3月</span>
+      </div>
+
+      <div class="tulsa-photos anim anim-3">
+        <div class="tulsa-photo">
+          <div class="tulsa-photo-img"><img src="/tulsa1.jpg" alt="Gargoyle Unit at Stadium" /></div>
+          <p class="tulsa-photo-lbl">スタジアム設置機</p>
+        </div>
+        <div class="tulsa-photo">
+          <div class="tulsa-photo-img"><img src="/tulsa2.PNG" alt="Live Detection Dashboard" /></div>
+          <p class="tulsa-photo-lbl">ライブ検知ダッシュボード</p>
+        </div>
+        <div class="tulsa-photo">
+          <div class="tulsa-photo-img"><img src="/tulsa3.jpg" alt="Security Team Operations" /></div>
+          <p class="tulsa-photo-lbl">警備チーム運用</p>
+        </div>
+      </div>
+
+      <div class="tulsa-pricing anim anim-4">
+        <div class="tulsa-price-item">
+          <span class="tulsa-price-val">約15万円</span>
+          <span class="tulsa-price-lbl">1台あたり</span>
+          <span class="tulsa-price-note">初期ハードウェア費用</span>
+        </div>
+        <div class="tulsa-price-item">
+          <span class="tulsa-price-val">約7.5万円<span class="tulsa-price-mo">/月</span></span>
+          <span class="tulsa-price-lbl">1台あたり月額</span>
+          <span class="tulsa-price-note">継続データサービス</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SLIDE 13: EXPANSION PATH ── -->
+  <div class="slide" id="slide-13" data-slide="15">
+    <div class="slide-content">
+      <span class="eyebrow anim anim-1" data-i18n="s12-eyebrow">Growth Strategy</span>
+      <h2 class="slide-headline anim anim-2" data-i18n="s12-headline">Expansion Path</h2>
+      <p class="slide-subheadline anim anim-2" data-i18n="s12-sub">From Detection → Airspace Intelligence Network</p>
+      <div class="expansion-path anim anim-3">
+        <div class="path-stage">
+          <div class="path-stage-num" data-i18n="s12-p1num">Phase 01</div>
+          <div class="path-stage-title" data-i18n="s12-p1title">Detection Infrastructure</div>
+          <div class="path-stage-desc" data-i18n="s12-p1desc">Deploy sensors across commercial sites. Build recurring revenue base with enterprise security teams.</div>
+        </div>
+        <div class="path-arrow">→</div>
+        <div class="path-stage">
+          <div class="path-stage-num" data-i18n="s12-p2num">Phase 02</div>
+          <div class="path-stage-title" data-i18n="s12-p2title">Airspace Data Layer</div>
+          <div class="path-stage-desc" data-i18n="s12-p2desc">Each deployment contributes anonymized data about drone activity, flight patterns, and threats.</div>
+        </div>
+        <div class="path-arrow">→</div>
+        <div class="path-stage">
+          <div class="path-stage-num" data-i18n="s12-p3num">Phase 03</div>
+          <div class="path-stage-title" data-i18n="s12-p3title">Airspace Intelligence Network</div>
+          <div class="path-stage-desc" data-i18n="s12-p3desc">Security operators gain real-time shared airspace awareness. Network-level threat intelligence.</div>
+        </div>
+      </div>
+      <p class="path-key-line anim anim-4" data-i18n="s12-keyline">Every new deployment makes the network smarter.</p>
+    </div>
+  </div>
+
+  <!-- ── SLIDE 14: SECURITY STACK ── -->
+  <div class="slide" id="slide-14" data-slide="16">
+    <div class="slide-content">
+      <span class="eyebrow anim anim-1" data-i18n="s14-eyebrow">Strategic Context</span>
+      <h2 class="slide-headline anim anim-2" data-i18n="s14-headline">Where Gargoyle Fits <br>in the Security Stack</h2>
+      <div class="sec-stack anim anim-3">
+        <div class="sec-stack-layer">
+          <span class="ssl-num">01</span>
+          <span data-i18n="s14-l1">Physical Barriers &amp; Guards</span>
+        </div>
+        <div class="sec-stack-layer">
+          <span class="ssl-num">02</span>
+          <span data-i18n="s14-l2">Camera &amp; Video Surveillance</span>
+        </div>
+        <div class="sec-stack-layer">
+          <span class="ssl-num">03</span>
+          <span data-i18n="s14-l3">Alarms &amp; Intrusion Detection</span>
+        </div>
+        <div class="sec-stack-layer">
+          <span class="ssl-num">04</span>
+          <span data-i18n="s14-l4">Access Control &amp; Identity</span>
+        </div>
+        <div class="sec-stack-layer">
+          <span class="ssl-num">05</span>
+          <span data-i18n="s14-l5">Analytics &amp; Behavior Intelligence</span>
+        </div>
+        <div class="sec-stack-sep" data-i18n="s14-sep">Gargoyle Adds</div>
+        <div class="sec-stack-layer gargoyle">
+          <span class="ssl-num">06</span>
+          <span data-i18n="s14-l6">Airspace Monitoring</span>
+          <span class="sec-stack-badge">Gargoyle</span>
+        </div>
+      </div>
+      <p class="sec-stack-close anim anim-4" data-i18n="s14-close">Every major security acquirer already owns layers 1–5.<br>Gargoyle is the natural next addition to any security platform.</p>
+    </div>
+  </div>
+
+  <!-- ── SLIDE 15: ACQUISITION PATHWAYS ── -->
+  <div class="slide" id="slide-15" data-slide="17">
+    <div class="slide-content">
+      <span class="eyebrow anim anim-1" data-i18n="s15-eyebrow">Strategic Value</span>
+      <h2 class="slide-headline anim anim-2" data-i18n="s15-headline">Acquisition Pathways</h2>
+      <p class="acq-sub anim anim-2" data-i18n="s15-sub">Security infrastructure consolidates rapidly once a new threat category emerges.<br>Airspace security becomes the next layer of the security stack.</p>
+      <!-- EN version -->
+      <div class="acq-columns anim anim-3 acq-col-en-only">
+
+        <div class="acq-col">
+          <div class="acq-col-title" data-i18n="s15-col1-title">Enterprise Security</div>
+          <div class="acq-companies">
+            <div class="acq-co"><img src="https://www.google.com/s2/favicons?domain=adt.com&sz=64" alt="ADT" /><span class="acq-co-name">ADT</span></div>
+            <div class="acq-co"><img src="https://www.google.com/s2/favicons?domain=verkada.com&sz=64" alt="Verkada" /><span class="acq-co-name">Verkada</span></div>
+            <div class="acq-co"><img src="https://www.google.com/s2/favicons?domain=motorolasolutions.com&sz=64" alt="Motorola Solutions" /><span class="acq-co-name">Motorola Solutions</span></div>
+            <div class="acq-co"><img src="https://www.google.com/s2/favicons?domain=honeywell.com&sz=64" alt="Honeywell" /><span class="acq-co-name">Honeywell</span></div>
+            <div class="acq-co"><img src="https://www.google.com/s2/favicons?domain=johnsoncontrols.com&sz=64" alt="Johnson Controls" /><span class="acq-co-name">Johnson Controls</span></div>
+          </div>
+          <p class="acq-col-desc" data-i18n="s15-col1-desc">Adds airspace protection to existing security platforms and increases recurring revenue per facility.</p>
+        </div>
+
+        <div class="acq-col">
+          <div class="acq-col-title" data-i18n="s15-col2-title">Consumer Security</div>
+          <div class="acq-companies">
+            <div class="acq-co"><img src="https://www.google.com/s2/favicons?domain=ring.com&sz=64" alt="Amazon Ring" /><span class="acq-co-name">Amazon Ring</span></div>
+            <div class="acq-co"><img src="https://www.google.com/s2/favicons?domain=nest.com&sz=64" alt="Google Nest" /><span class="acq-co-name">Google Nest</span></div>
+            <div class="acq-co"><img src="https://www.google.com/s2/favicons?domain=xfinity.com&sz=64" alt="Comcast Xfinity" /><span class="acq-co-name">Comcast Xfinity</span></div>
+            <div class="acq-co"><img src="https://www.google.com/s2/favicons?domain=simplisafe.com&sz=64" alt="SimpliSafe" /><span class="acq-co-name">SimpliSafe</span></div>
+          </div>
+          <p class="acq-col-desc" data-i18n="s15-col2-desc">Extends home and small business security from ground monitoring to airspace awareness.</p>
+        </div>
+
+        <div class="acq-col">
+          <div class="acq-col-title" data-i18n="s15-col3-title">Defense Platforms</div>
+          <div class="acq-companies">
+            <div class="acq-co"><img src="https://www.google.com/s2/favicons?domain=anduril.com&sz=64" alt="Anduril" /><span class="acq-co-name">Anduril</span></div>
+            <div class="acq-co"><img src="https://www.google.com/s2/favicons?domain=dedrone.com&sz=64" alt="Dedrone" /><span class="acq-co-name">Dedrone</span></div>
+            <div class="acq-co"><img src="https://www.google.com/s2/favicons?domain=fortemtech.com&sz=64" alt="Fortem Technologies" /><span class="acq-co-name">Fortem Technologies</span></div>
+            <div class="acq-co"><img src="https://www.google.com/s2/favicons?domain=raytheon.com&sz=64" alt="Raytheon" /><span class="acq-co-name">Raytheon</span></div>
+          </div>
+          <p class="acq-col-desc" data-i18n="s15-col3-desc">Provides distributed commercial detection infrastructure that complements existing radar and defense systems.</p>
+        </div>
+
+      </div>
+
+      <!-- JP version: The Ring of Airspace Security -->
+      <div class="acq-columns anim anim-3 acq-col-jp-only">
+
+        <div class="acq-col">
+          <div class="acq-col-title">Ground Security</div>
+          <div class="acq-companies">
+            <div class="acq-co"><img src="https://www.google.com/s2/favicons?domain=adt.com&sz=64" alt="ADT" /><span class="acq-co-name">ADT</span></div>
+            <div class="acq-co"><img src="https://www.google.com/s2/favicons?domain=secom.co.jp&sz=64" alt="SECOM" /><span class="acq-co-name">セコム</span></div>
+            <div class="acq-co"><img src="https://www.google.com/s2/favicons?domain=alsok.co.jp&sz=64" alt="ALSOK" /><span class="acq-co-name">アルソック</span></div>
+            <div class="acq-co"><img src="https://www.google.com/s2/favicons?domain=honeywell.com&sz=64" alt="Honeywell" /><span class="acq-co-name">Honeywell</span></div>
+            <div class="acq-co"><img src="https://www.google.com/s2/favicons?domain=verkada.com&sz=64" alt="Verkada" /><span class="acq-co-name">Verkada</span></div>
+          </div>
+          <p class="acq-col-desc">建物や施設を保護する</p>
+        </div>
+
+        <div class="acq-col">
+          <div class="acq-col-title">Smart Home Security</div>
+          <div class="acq-companies">
+            <div class="acq-co"><img src="https://www.google.com/s2/favicons?domain=ring.com&sz=64" alt="Amazon Ring" /><span class="acq-co-name">Amazon Ring</span></div>
+            <div class="acq-co"><img src="https://www.google.com/s2/favicons?domain=nest.com&sz=64" alt="Google Nest" /><span class="acq-co-name">Google Nest</span></div>
+            <div class="acq-co"><img src="https://www.google.com/s2/favicons?domain=panasonic.com&sz=64" alt="Panasonic Smart Home" /><span class="acq-co-name">Panasonic Smart Home</span></div>
+            <div class="acq-co"><img src="https://www.google.com/s2/favicons?domain=softbank.jp&sz=64" alt="SoftBank" /><span class="acq-co-name">SoftBank</span></div>
+            <div class="acq-co"><img src="https://www.google.com/s2/favicons?domain=ntt.co.jp&sz=64" alt="NTT Smart Life" /><span class="acq-co-name">NTT Smart Life</span></div>
+          </div>
+          <p class="acq-col-desc">分散型コンシューマーセンシングネットワーク</p>
+        </div>
+
+        <div class="acq-col">
+          <div class="acq-col-title">Airspace Security</div>
+          <div class="acq-companies">
+            <div class="acq-co"><img src="https://www.google.com/s2/favicons?domain=anduril.com&sz=64" alt="Anduril" /><span class="acq-co-name">Anduril</span></div>
+            <div class="acq-co"><img src="https://www.google.com/s2/favicons?domain=raytheon.com&sz=64" alt="Raytheon" /><span class="acq-co-name">Raytheon</span></div>
+            <div class="acq-co"><img src="https://www.google.com/s2/favicons?domain=nec.com&sz=64" alt="NEC" /><span class="acq-co-name">日本電気 (NEC)</span></div>
+            <div class="acq-co"><img src="https://www.google.com/s2/favicons?domain=mhi.com&sz=64" alt="Mitsubishi Heavy Industries" /><span class="acq-co-name">三菱重工業</span></div>
+            <div class="acq-co"><img src="https://www.google.com/s2/favicons?domain=khi.co.jp&sz=64" alt="Kawasaki Heavy Industries" /><span class="acq-co-name">川崎重工業</span></div>
+          </div>
+          <p class="acq-col-desc">分散型低高度検知インフラ</p>
+        </div>
+
+      </div>
+      <p class="acq-closing anim anim-4" data-i18n="s15-closing">Airspace monitoring becomes a natural extension of existing security infrastructure.<br>Multiple industries are positioned to integrate this capability.</p>
+      <p class="acq-footer anim anim-5" data-i18n="s15-footer">Strategic integrations can scale rapidly across existing security portfolios.</p>
+    </div>
+  </div>
+
+  <!-- ── SLIDE 16: CTA ── -->
+  <!-- ── SLIDE 16: TEAM ── -->
+  <div class="slide" id="slide-team" data-slide="18">
+    <div class="glow glow-blue" style="width:600px;height:600px;top:50%;left:50%;transform:translate(-50%,-50%);opacity:0.07;"></div>
+    <div class="slide-content" style="max-width:900px;">
+      <span class="eyebrow anim anim-1">チーム</span>
+      <h2 class="slide-headline anim anim-2" style="margin-bottom:48px;">現場を知る創業者。<br>実戦経験に支えられたチーム。</h2>
+      <div class="team-cards anim anim-3">
+
+        <!-- Matteo -->
+        <div class="team-card">
+          <img class="team-photo" src="matteo.png" alt="Matteo Pietrobelli" />
+          <div class="team-role">Co-Founder &amp; CTO</div>
+          <div class="team-name">Matteo Pietrobelli</div>
+          <div class="team-divider"></div>
+          <ul class="team-creds">
+            <li>Oceanix</li>
+            <li>HyperloopTT</li>
+            <li>Johns Hopkins</li>
+            <li>Caltech</li>
+            <li>MIT</li>
+            <li>Lived on 4 continents</li>
+            <li>Water Polo champion</li>
+          </ul>
+        </div>
+
+        <!-- Mike -->
+        <div class="team-card">
+          <img class="team-photo" src="mike.png" alt="Mike Fraietta" />
+          <div class="team-role">Co-Founder &amp; CEO</div>
+          <div class="team-name">Mike Fraietta</div>
+          <div class="team-divider"></div>
+          <ul class="team-creds">
+            <li>EmpireDAO Founder</li>
+            <li>BNY Mellon</li>
+            <li>News Corporation</li>
+            <li>Jive Software (IPO'd)</li>
+            <li>Filtrbox (Acquired)</li>
+            <li>Lived on 4 continents</li>
+            <li>Aussie Rules champion</li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SLIDE 17: CONTACT ── -->
+  <!-- ── SLIDE ASK: THE ASK ── -->
+  <style>
+    .ask-terms { display:flex; align-items:center; justify-content:center; margin:36px 0 44px; }
+    .ask-term { text-align:center; padding:0 52px; }
+    .ask-term-value { font-size:clamp(2.4rem,5vw,3.6rem); font-weight:700; letter-spacing:-0.02em; color:var(--white); line-height:1; }
+    .ask-term-label { font-size:0.78rem; color:var(--white-30); text-transform:uppercase; letter-spacing:0.1em; margin-top:10px; }
+    .ask-term-divider { width:1px; height:68px; background:rgba(255,255,255,0.12); flex-shrink:0; }
+    .ask-funds { display:flex; gap:16px; justify-content:center; max-width:780px; margin:0 auto; }
+    .ask-fund { flex:1; padding:18px 20px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); border-radius:12px; }
+    .ask-fund-pct { font-size:1.5rem; font-weight:700; color:var(--blue); margin-bottom:6px; }
+    .ask-fund-title { font-size:0.82rem; font-weight:600; color:var(--white); margin-bottom:4px; }
+    .ask-fund-desc { font-size:0.76rem; color:var(--white-30); line-height:1.5; }
+  </style>
+  <div class="slide" id="slide-ask" data-slide="19">
+    <div class="glow glow-blue" style="width:700px;height:700px;top:50%;left:50%;transform:translate(-50%,-50%);opacity:0.09;"></div>
+    <div class="slide-content">
+      <span class="eyebrow anim anim-1">資金調達</span>
+      <h2 class="slide-headline anim anim-2">現在、約15億円のポストマネー評価にて、<br><span class="accent-blue">約1.5億円</span>の資金調達を進めております。</h2>
+      <div class="ask-terms anim anim-3">
+        <div class="ask-term">
+          <div class="ask-term-value">約15億円</div>
+          <div class="ask-term-label">ポストマネー評価額</div>
+        </div>
+        <div class="ask-term-divider"></div>
+        <div class="ask-term">
+          <div class="ask-term-value">約1.5億円</div>
+          <div class="ask-term-label">調達総額</div>
+        </div>
+        <div class="ask-term-divider"></div>
+        <div class="ask-term">
+          <div class="ask-term-value">4,000万円〜1.5億円</div>
+          <div class="ask-term-label">想定出資額</div>
+        </div>
+      </div>
+      <div class="ask-funds anim anim-4">
+        <div class="ask-fund">
+          <div class="ask-fund-pct">50%</div>
+          <div class="ask-fund-title">ハードウェア・導入</div>
+          <div class="ask-fund-desc">センサー量産体制の拡大と顧客導入の加速</div>
+        </div>
+        <div class="ask-fund">
+          <div class="ask-fund-pct">30%</div>
+          <div class="ask-fund-title">ソフトウェア・基盤</div>
+          <div class="ask-fund-desc">AI検知精度の向上とクラウド基盤の拡張</div>
+        </div>
+        <div class="ask-fund">
+          <div class="ask-fund-pct">20%</div>
+          <div class="ask-fund-title">営業・事業開発</div>
+          <div class="ask-fund-desc">エンタープライズ案件と政府案件パイプラインの拡大</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide" id="slide-16" data-slide="20">
+    <div class="glow glow-blue" style="width:700px;height:700px;top:50%;left:50%;transform:translate(-50%,-50%);opacity:0.1;"></div>
+    <div class="slide-content s14-content">
+      <div class="anim anim-1" style="margin-bottom:28px;">
+        <img src="/gargoyle.png" alt="Gargoyle Systems" style="width:72px;height:72px;object-fit:contain;opacity:0.9;" />
+      </div>
+      <span class="eyebrow anim anim-1" data-i18n="s16-eyebrow">Get in Touch</span>
+      <h2 class="s14-headline anim anim-2">Gargoyle Systems</h2>
+      <p class="s14-sub anim anim-3" data-i18n="s16-sub">Airspace Security Infrastructure for the Drone Era.</p>
+      <div class="s14-demo anim anim-3">
+        <a class="s14-demo-btn" href="https://ksc-gargoyle-demo.netlify.app/" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 20 20" fill="currentColor"><path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z"/></svg>
+          ライブデモを見る
+        </a>
+      </div>
+      <div class="s14-divider anim anim-4"></div>
+      <div class="s14-contacts anim anim-5">
+        <div class="s14-contact">
+          <span style="color:var(--white-30)" data-i18n="s16-email-label">Email</span>
+          <a href="mailto:mike@gargoylesystems.io">mike@gargoylesystems.io</a>
+        </div>
+        <div class="s14-contact">
+          <span style="color:var(--white-30)" data-i18n="s16-web-label">Web</span>
+          <a href="https://gargoylesystems.io" target="_blank">gargoylesystems.io</a>
+        </div>
+      </div>
+      <p class="s14-tagline anim anim-5" data-i18n="s16-footer">
+        © 2026 Gargoyle Systems &nbsp;·&nbsp; Confidential Investor Information
+      </p>
+    </div>
+  </div>
+
+</div><!-- /deck -->
+
+<!-- ── Nav Controls ── -->
+<button class="nav-arrow" id="nav-prev" title="Previous slide">
+  <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z" clip-rule="evenodd"/></svg>
+</button>
+<button class="nav-arrow" id="nav-next" title="Next slide">
+  <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd"/></svg>
+</button>
+<div id="slide-counter"></div>
+<div id="nav-hint" data-i18n="nav-hint">Click to advance</div>
+
+<div id="lang-toggle">
+  <button class="lang-opt active" data-l="en" onclick="setLang('en')">EN</button>
+  <button class="lang-opt" data-l="jp" onclick="setLang('jp')">JP</button>
+</div>
+
+<script>
+/* ════════════════════════════════════════════
+   ANALYTICS
+════════════════════════════════════════════ */
+const Analytics = {
+  data: JSON.parse(localStorage.getItem('gs_analytics') || '{"sessions":[],"current":null}'),
+  session: null,
+
+  startSession(email) {
+    this.session = {
+      email,
+      started: Date.now(),
+      slides: [],
+      currentSlide: null,
+      currentStart: null
+    };
+  },
+
+  trackSlideEnter(n) {
+    if (!this.session) return;
+    if (this.session.currentSlide !== null) {
+      this.trackSlideExit(this.session.currentSlide);
+    }
+    this.session.currentSlide = n;
+    this.session.currentStart = Date.now();
+    console.log('[GS Analytics] slide_view', { slide: n, ts: new Date().toISOString() });
+  },
+
+  trackSlideExit(n) {
+    if (!this.session || this.session.currentStart === null) return;
+    const duration = Date.now() - this.session.currentStart;
+    this.session.slides.push({ slide: n, duration_ms: duration });
+    this.session.currentSlide = null;
+    this.session.currentStart = null;
+  },
+
+  save() {
+    if (!this.session) return;
+    this.trackSlideExit(this.session.currentSlide);
+    this.data.sessions.push({ ...this.session, ended: Date.now() });
+    localStorage.setItem('gs_analytics', JSON.stringify(this.data));
+    console.log('[GS Analytics] session saved', this.session);
+  }
+};
+
+window.addEventListener('beforeunload', () => Analytics.save());
+
+/* ════════════════════════════════════════════
+   EMAIL GATE
+════════════════════════════════════════════ */
+const gate = document.getElementById('email-gate');
+const gateForm = document.getElementById('gate-form');
+const gateEmail = document.getElementById('gate-email');
+const gateBtn = document.getElementById('gate-btn');
+const deck = document.getElementById('deck');
+const progressBar = document.getElementById('progress-bar');
+const slideCounter = document.getElementById('slide-counter');
+const navHint = document.getElementById('nav-hint');
+const navPrev = document.getElementById('nav-prev');
+const navNext = document.getElementById('nav-next');
+
+/* ════════════════════════════════════════════
+   SLIDE NAVIGATION (declared before initDeck call)
+════════════════════════════════════════════ */
+const TOTAL_SLIDES = 20;
+let current = 0;
+let transitioning = false;
+const slides = Array.from(document.querySelectorAll('.slide'));
+
+function goToSlide(n, direction) {
+  if (n < 1 || n > TOTAL_SLIDES) return;
+  if (transitioning && direction !== 'none') return;
+  transitioning = true;
+
+  const prev = slides.find(s => s.classList.contains('active'));
+  const next = slides[n - 1];
+
+  if (prev && prev !== next) {
+    prev.classList.remove('active');
+    if (direction === 'forward') prev.classList.add('exit-up');
+    setTimeout(() => prev.classList.remove('exit-up'), 700);
+  }
+
+  next.classList.add('active');
+  current = n;
+
+  progressBar.style.width = ((n / TOTAL_SLIDES) * 100) + '%';
+  slideCounter.textContent = n + ' / ' + TOTAL_SLIDES;
+
+  if (n > 1) navHint.style.display = 'none';
+
+  navPrev.style.opacity = n === 1 ? '0.2' : '1';
+  navNext.style.opacity = n === TOTAL_SLIDES ? '0.2' : '1';
+
+  Analytics.trackSlideEnter(n);
+
+  if (n === 12) animateMarketBars();
+
+  setTimeout(() => { transitioning = false; }, 700);
+}
+
+function next() { if (current < TOTAL_SLIDES) goToSlide(current + 1, 'forward'); }
+function prev() { if (current > 1) goToSlide(current - 1, 'back'); }
+
+// Check if already submitted this session
+const savedEmail = sessionStorage.getItem('gs_investor_email');
+if (savedEmail) {
+  initDeck(savedEmail);
+}
+
+gateForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const email = gateEmail.value.trim();
+  if (!email || !email.includes('@')) {
+    gateEmail.style.borderColor = '#f87171';
+    gateEmail.focus();
+    return;
+  }
+  gateEmail.style.borderColor = '';
+  gateBtn.textContent = 'Loading…';
+  gateBtn.classList.add('loading');
+
+  // Store locally
+  sessionStorage.setItem('gs_investor_email', email);
+  const leads = JSON.parse(localStorage.getItem('gs_investor_leads') || '[]');
+  leads.push({ email, ts: new Date().toISOString() });
+  localStorage.setItem('gs_investor_leads', JSON.stringify(leads));
+  console.log('[GS] Investor access:', email);
+
+  const netlifyFormData = new URLSearchParams({
+    'form-name': 'investor-access',
+    'email': email,
+    'bot-field': ''
+  });
+
+  // Record the lead in Netlify Forms so native submission notifications can fire.
+  const submissionTasks = [
+    fetch('/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: netlifyFormData.toString()
+    }).then((response) => {
+      if (!response.ok) throw new Error(`Netlify form submit failed (${response.status})`);
+      console.log('[GS] Netlify form submission recorded:', email);
+    }),
+    fetch('/api/submit-email', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email })
+    }).catch((err) => {
+      console.warn('[GS] Notification warning:', err);
+    })
+  ];
+
+  const submissionResults = await Promise.allSettled(submissionTasks);
+  const netlifySubmissionFailed = submissionResults[0].status === 'rejected';
+  if (netlifySubmissionFailed) {
+    console.warn('[GS] Netlify form submission warning:', submissionResults[0].reason);
+  }
+
+  initDeck(email);
+});
+
+function initDeck(email) {
+  Analytics.startSession(email);
+  gate.classList.add('fade-out');
+  setTimeout(() => { gate.style.display = 'none'; }, 750);
+
+  deck.classList.add('visible');
+  progressBar.style.display = 'block';
+  slideCounter.style.display = 'block';
+  navHint.style.display = 'block';
+  navPrev.style.display = 'flex';
+  navNext.style.display = 'flex';
+  document.getElementById('lang-toggle').style.display = 'flex';
+
+  goToSlide(1, 'none');
+}
+
+// Click anywhere to advance (except interactive elements)
+deck.addEventListener('click', (e) => {
+  const tag = e.target.tagName;
+  if (['A','BUTTON','INPUT','SELECT'].includes(tag)) return;
+  next();
+});
+
+navNext.addEventListener('click', (e) => { e.stopPropagation(); next(); });
+navPrev.addEventListener('click', (e) => { e.stopPropagation(); prev(); });
+
+// Keyboard
+document.addEventListener('keydown', (e) => {
+  if (e.target.tagName === 'INPUT') return;
+  if (['ArrowRight','ArrowDown','Space',' '].includes(e.key)) { e.preventDefault(); next(); }
+  if (['ArrowLeft','ArrowUp'].includes(e.key)) { e.preventDefault(); prev(); }
+});
+
+// Scroll / wheel (debounced)
+let lastScroll = 0;
+deck.addEventListener('wheel', (e) => {
+  e.preventDefault();
+  const now = Date.now();
+  if (now - lastScroll < 800) return;
+  lastScroll = now;
+  if (e.deltaY > 0) next(); else prev();
+}, { passive: false });
+
+// Touch swipe — horizontal (left/right) and vertical (up/down)
+let touchStartX = 0, touchStartY = 0;
+deck.addEventListener('touchstart', (e) => {
+  touchStartX = e.touches[0].clientX;
+  touchStartY = e.touches[0].clientY;
+}, { passive: true });
+deck.addEventListener('touchend', (e) => {
+  const dx = touchStartX - e.changedTouches[0].clientX;
+  const dy = touchStartY - e.changedTouches[0].clientY;
+  if (Math.abs(dx) > Math.abs(dy)) {
+    if (Math.abs(dx) > 36) { if (dx > 0) next(); else prev(); }
+  } else {
+    if (Math.abs(dy) > 36) { if (dy > 0) next(); else prev(); }
+  }
+}, { passive: true });
+
+/* ════════════════════════════════════════════
+   RADAR ANIMATION (Slide 1)
+════════════════════════════════════════════ */
+(function initRadar() {
+  const canvas = document.getElementById('radar-canvas');
+  const ctx = canvas.getContext('2d');
+  let angle = 0;
+  let blips = [];
+  let raf;
+
+  function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  function spawnBlip() {
+    const cx = canvas.width / 2, cy = canvas.height / 2;
+    const r = Math.random() * Math.min(cx, cy) * 0.75;
+    const a = angle + (Math.random() - 0.5) * 0.3;
+    blips.push({
+      x: cx + Math.cos(a) * r,
+      y: cy + Math.sin(a) * r,
+      born: Date.now(),
+      life: 2500 + Math.random() * 1500
+    });
+    if (blips.length > 18) blips.shift();
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    const cx = canvas.width / 2, cy = canvas.height / 2;
+    const maxR = Math.min(cx, cy) * 0.85;
+
+    // Rings
+    ctx.strokeStyle = 'rgba(2,132,199,0.14)';
+    ctx.lineWidth = 0.8;
+    for (let i = 1; i <= 5; i++) {
+      ctx.beginPath();
+      ctx.arc(cx, cy, maxR * (i / 5), 0, Math.PI * 2);
+      ctx.stroke();
+    }
+
+    // Cross hairs
+    ctx.strokeStyle = 'rgba(2,132,199,0.09)';
+    ctx.setLineDash([4, 8]);
+    ctx.lineWidth = 0.6;
+    ctx.beginPath(); ctx.moveTo(cx - maxR, cy); ctx.lineTo(cx + maxR, cy); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(cx, cy - maxR); ctx.lineTo(cx, cy + maxR); ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Sweep
+    const grad = ctx.createConicalGradient
+      ? ctx.createConicalGradient(cx, cy, angle - Math.PI * 0.6, angle)
+      : null;
+
+    // Fallback sweep triangle
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.rotate(angle);
+    const sweepGrad = ctx.createLinearGradient(0, 0, maxR, 0);
+    sweepGrad.addColorStop(0, 'rgba(2,132,199,0.0)');
+    sweepGrad.addColorStop(1, 'rgba(2,132,199,0.4)');
+
+    // Sweep sector
+    const sectorAngle = Math.PI * 0.45;
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.arc(0, 0, maxR, -sectorAngle, 0, false);
+    ctx.closePath();
+    ctx.fillStyle = 'rgba(2,132,199,0.05)';
+    ctx.fill();
+
+    // Sweep line
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.lineTo(maxR, 0);
+    ctx.strokeStyle = 'rgba(2,132,199,0.55)';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+    ctx.restore();
+
+    // Blips
+    const now = Date.now();
+    blips.forEach(b => {
+      const age = now - b.born;
+      const t = age / b.life;
+      if (t > 1) return;
+      const alpha = (1 - t) * 0.85;
+      const size = 3 + t * 2;
+      ctx.beginPath();
+      ctx.arc(b.x, b.y, size, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(5,150,105,${alpha})`;
+      ctx.fill();
+      // Glow
+      ctx.beginPath();
+      ctx.arc(b.x, b.y, size + 4, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(5,150,105,${alpha * 0.2})`;
+      ctx.fill();
+    });
+
+    angle += 0.012;
+    if (angle % (Math.PI * 0.3) < 0.015) spawnBlip();
+
+    raf = requestAnimationFrame(draw);
+  }
+
+  draw();
+})();
+
+/* ════════════════════════════════════════════
+   MARKET BARS ANIMATION
+════════════════════════════════════════════ */
+function animateMarketBars() {
+  const fills = document.querySelectorAll('#market-bars .market-bar-fill');
+  fills.forEach((fill, i) => {
+    setTimeout(() => {
+      fill.style.width = fill.dataset.width;
+    }, i * 100);
+  });
+}
+
+/* ════════════════════════════════════════════
+   LANGUAGE TOGGLE
+════════════════════════════════════════════ */
+const T = {
+  en: {
+    'gate-eyebrow': 'Investor Access',
+    'gate-headline': 'Access the Gargoyle Systems<br>Investor Brief',
+    'gate-sub': 'Gargoyle Systems is building the infrastructure that secures the airspace above critical assets.<br>Enter your email to view the full investor presentation.',
+    'gate-btn': 'View Presentation →',
+    'gate-privacy': 'No spam. Used only to track investor interest.',
+    'nav-hint': 'Click to advance',
+    's1-sub': 'Managed Airspace Security Infrastructure',
+    's1-tagline': 'Protecting the airspace above critical assets.',
+    's1-hint': 'Click or press ↓ to advance',
+    's2-eyebrow': 'A word first',
+    's2-headline': 'This May Not<br>Be For You',
+    's2-intro': 'If you do <strong>not</strong> believe that:',
+    's2-belief1': '<strong>Drones will become common in everyday airspace</strong>',
+    's2-belief2': '<strong>Drone-enabled security threats will increase</strong>',
+    's2-belief3': '<strong>AI will accelerate drone deployment at massive scale</strong>',
+    's2-close': '…then this opportunity probably isn\'t a fit.',
+    's3p-eyebrow': 'The Threat',
+    's3p-headline': 'Small-Class Drones<br>Change the Threat Model',
+    's3p-body': 'Cheap, quiet drones give bad actors an eye in the sky, a delivery path over the fence, and reconnaissance without ever touching the ground perimeter.',
+    's3p-card1-label': 'Robbery Support',
+    's3p-card1-title': 'Real-Time Eye in the Sky',
+    's3p-card1-body': 'Crews can scout entry points, watch guard patterns, and coordinate break-ins with live overhead visibility.',
+    's3p-card2-label': 'Corporate Espionage',
+    's3p-card2-title': 'Reconnaissance Without Access',
+    's3p-card2-body': 'Low-cost drones can observe yards, loading docks, prototypes, and executive movement without breaching a gate.',
+    's3p-card3-label': 'Payload Delivery',
+    's3p-card3-title': 'Carry Contraband or Devices',
+    's3p-card3-body': 'Even small drones can drop phones, narcotics, sensors, or malicious hardware onto otherwise secured property.',
+    's3p-card4-label': 'Executive & Event Risk',
+    's3p-card4-title': 'Stalking, Disruption, and Panic',
+    's3p-card4-body': 'At campuses, residences, or venues, a drone can surveil VIPs, disrupt operations, or trigger high-visibility security incidents.',
+    's3p-close': 'The problem is not that the fence is broken. The problem is that the threat never needs to use the gate.',
+    's3-eyebrow': 'The Customer',
+    's3-headline': 'Who Secures the Airspace?',
+    's3-body': 'The same organizations that protect the ground.',
+    's3-corp-name': 'Corporate Security',
+    's3-corp-desc': 'Enterprise campuses protecting data centers, HQs, and operations',
+    's3-priv-name': 'Private Security Firms',
+    's3-priv-desc': 'Managed security providers expanding their service portfolio',
+    's3-exec-name': 'Executive Protection',
+    's3-exec-desc': 'High-net-worth individual and executive site security',
+    's3-evnt-name': 'Event Security',
+    's3-evnt-desc': 'Stadiums, concert venues, and large-scale public events',
+    's3-infr-name': 'Critical Infrastructure',
+    's3-infr-desc': 'Power plants, utilities, water treatment, and industrial sites',
+    's3-unis-name': 'Universities &amp; Research',
+    's3-unis-desc': 'Campus security teams protecting sensitive facilities',
+    's4-eyebrow': 'The Problem',
+    's4-headline': 'Counter-Drone Was<br>Built for the Military',
+    's4-body': 'Not for businesses.',
+    's4-col1-title': 'Typical Solutions',
+    's4-bad1': 'Radar-based counter-UAS systems',
+    's4-bad2': 'RF jamming systems',
+    's4-bad3': 'Government defense installations',
+    's4-bad4': 'Specialized military operators required',
+    's4-cost': '$100,000 – $1,000,000 per site',
+    's4-col2-title': 'The Result',
+    's4-result': 'Most businesses have <strong>zero drone protection.</strong><br><br>The technology exists — but it was never designed for commercial deployment at commercial prices.',
+    's5-eyebrow': 'ギャップ',
+    's5-headline': '従来の警備は屋根の高さで終わる',
+    's5-body': 'カメラ、アラーム、アクセス制御、外周警備は地上を守ります。<br>しかしその上の空域は、依然として抜け落ちたレイヤーです。',
+    's5-sky-label': 'UNMONITORED AIRSPACE',
+    's5-no-detect': 'NO DETECTION',
+    's5-drone-label': 'UNAUTHORIZED DRONE',
+    's5-badge-cam': 'Cameras',
+    's5-badge-alarm': 'Alarms',
+    's5-badge-access': 'Access Control',
+    's5-badge-perim': 'Perimeter',
+    's5-ground-bar': 'GROUND COVERED',
+    's5-pill-cam': 'Cameras',
+    's5-pill-alarm': 'Alarms',
+    's5-pill-access': 'Access Control',
+    's5-pill-perim': 'Perimeter Sensors',
+    's5-pill-motion': 'Motion Detection',
+    's6a-eyebrow': 'Clarification',
+    's6a-headline': 'We Deploy Sensors.<br>We Do Not Patrol With Drones.',
+    's6a-body': 'Gargoyle installs fixed hardware on the site that detects and classifies drones entering protected airspace.',
+    's6a-callout-label': 'What It Is',
+    's6a-callout-title': 'Installed detection infrastructure for the sky',
+    's6a-point1': '<strong>Mounted on buildings and perimeter positions,</strong> not flown overhead like a patrol drone.',
+    's6a-point2': '<strong>Continuously detects and classifies nearby aircraft,</strong> then sends alerts into the existing security workflow.',
+    's6a-point3': '<strong>Works like security infrastructure,</strong> not like another flying fleet your team has to operate.',
+    's6-eyebrow': 'The Solution',
+    's6-headline': 'Gargoyle',
+    's6-sub': 'Fixed airspace detection for commercial security teams.',
+    's6-point1': '<strong>Installed at the site,</strong> not flown as a patrol drone.',
+    's6-point2': '<strong>Built for security operations,</strong> with alerts that fit existing workflows.',
+    's6-airspace-lbl': 'UNMONITORED AIRSPACE',
+    's6-cap1-title': 'Sensor Deployment',
+    's6-cap1-desc': 'Install detection nodes around the facility perimeter.',
+    's6-cap2-title': 'Drone Detection',
+    's6-cap2-desc': 'Flag drones entering protected airspace within seconds.',
+    's6-cap3-title': 'Flight Classification',
+    's6-cap3-desc': 'Separate authorized flights from unknown threats.',
+    's6-cap4-title': 'Security Integration',
+    's6-cap4-desc': 'Feed alerts into existing security systems and workflows.',
+    's6-cap5-title': 'Instant Alerting',
+    's6-cap5-desc': 'Notify the team the moment an unauthorized flight appears.',
+    's6-cap6-title': 'Managed Monitoring',
+    's6-cap6-desc': '24/7 coverage without building in-house drone expertise.',
+    's7-eyebrow': 'Coverage',
+    's7-headline': 'From Blind Spot<br>to Full Coverage',
+    's7-before-label': 'Before Gargoyle',
+    's7-before-title': 'Ground Security Only',
+    's7-b1': '<div class="split-item-dot good"></div>Ground perimeter monitored',
+    's7-b2': '<div class="split-item-dot good"></div>Access points secured',
+    's7-b3': '<div class="split-item-dot good"></div>Cameras and alarms active',
+    's7-b4': '<div class="split-item-dot bad"></div>Airspace: <strong style="color:#dc2626">completely blind</strong>',
+    's7-b5': '<div class="split-item-dot bad"></div>Drone surveillance: <strong style="color:#dc2626">undetectable</strong>',
+    's7-b6': '<div class="split-item-dot bad"></div>Payload delivery: <strong style="color:#dc2626">no alert</strong>',
+    's7-after-label': 'After Gargoyle',
+    's7-after-title': 'Ground + Airspace<br>Full Coverage',
+    's7-a1': '<div class="split-item-dot good"></div>Ground perimeter monitored',
+    's7-a2': '<div class="split-item-dot good"></div>Access points secured',
+    's7-a3': '<div class="split-item-dot good"></div>Cameras and alarms active',
+    's7-a4': '<div class="split-item-dot good"></div>Airspace: <strong style="color:#059669">real-time detection</strong>',
+    's7-a5': '<div class="split-item-dot good"></div>Drone tracking: <strong style="color:#059669">instant classification</strong>',
+    's7-a6': '<div class="split-item-dot good"></div>Unauthorized flight: <strong style="color:#059669">immediate alert</strong>',
+    's8-eyebrow': 'The Insight',
+    's8-headline': 'Every Security System<br>Misses the Sky',
+    's8-panel1-title': 'Ground: Fully Protected',
+    's8-g1': '<span class="miss-check">✓</span>Video surveillance',
+    's8-g2': '<span class="miss-check">✓</span>Intrusion detection',
+    's8-g3': '<span class="miss-check">✓</span>Access control',
+    's8-g4': '<span class="miss-check">✓</span>Perimeter fencing',
+    's8-g5': '<span class="miss-check">✓</span>Guard patrols',
+    's8-panel2-title': 'Airspace: Fully Exposed',
+    's8-a1': '<span class="miss-x">✗</span>Aerial surveillance detection',
+    's8-a2': '<span class="miss-x">✗</span>Drone tracking',
+    's8-a3': '<span class="miss-x">✗</span>Payload monitoring',
+    's8-a4': '<span class="miss-x">✗</span>Flight classification',
+    's8-a5': '<span class="miss-x">✗</span>Airspace alerting',
+    's8-tagline': '<span>Ground security is standard.</span> &nbsp;Airspace security is next.',
+    's9-eyebrow': 'Competitive Position',
+    's9-headline': 'Why Gargoyle Wins',
+    's9-col-mil': 'Military Systems',
+    's9-row1': 'Customer',
+    's9-row2': 'Cost',
+    's9-row3': 'Deployment',
+    's9-row4': 'Operations',
+    's9-row5': 'Business Model',
+    's9-row6': 'Integration',
+    's9-mil1': 'Defense / Government agencies',
+    's9-mil2': '$100k – $1M+ per site',
+    's9-mil3': 'Complex, months-long',
+    's9-mil4': 'Specialized military operators',
+    's9-mil5': 'Hardware sale, one-time',
+    's9-mil6': 'Standalone, siloed',
+    's9-gar1': 'Enterprise security teams',
+    's9-gar2': 'Accessible — subscription model',
+    's9-gar3': 'Fast install, days not months',
+    's9-gar4': 'Existing security teams',
+    's9-gar5': 'Recurring managed service',
+    's9-gar6': 'Native security stack integration',
+    's10-eyebrow': '市場',
+    's10-headline': '市場規模',
+    's10-body': 'ドローンの普及に伴い、ドローン検知市場は急速に拡大しています。保護対象となるあらゆる施設が、空域監視の潜在顧客です。',
+    's10-chart1-title': '主要な導入セグメント',
+    's10-seg1': '企業キャンパス',
+    's10-seg2': 'スタジアム・会場',
+    's10-seg3': 'データセンター',
+    's10-seg4': '産業施設',
+    's10-seg5': '物流ハブ',
+    's10-seg6': '大学',
+    's10-chart2-title': 'ドローン検知市場の成長予測',
+    's11-eyebrow': 'Business Model',
+    's11-headline': 'Recurring Per-Site<br>Security Service',
+    's11-s1num': 'Stream 01',
+    's11-s1title': 'Sensor Deployment',
+    's11-s1desc': 'Hardware placement and installation across the facility perimeter. One-time setup fee per site.',
+    's11-s2num': 'Stream 02',
+    's11-s2title': 'SaaS Platform',
+    's11-s2desc': 'Cloud-based airspace monitoring dashboard, alerting, and analytics. Per-site monthly subscription.',
+    's11-s3num': 'Stream 03',
+    's11-s3title': 'Managed Service',
+    's11-s3desc': '24/7 SOC monitoring, threat response, and reporting — as a fully managed recurring service.',
+    's11-expand-label': 'Land &amp; Expand',
+    's11-expand-text': 'Land one facility → expand across the entire property portfolio.<br>One security director relationship unlocks dozens of sites.',
+    's12-eyebrow': 'Growth Strategy',
+    's12-headline': 'Expansion Path',
+    's12-sub': 'From Detection → Airspace Intelligence Network',
+    's12-p1num': 'Phase 01',
+    's12-p1title': 'Detection Infrastructure',
+    's12-p1desc': 'Deploy sensors across commercial sites. Build recurring revenue base with enterprise security teams.',
+    's12-p2num': 'Phase 02',
+    's12-p2title': 'Airspace Data Layer',
+    's12-p2desc': 'Each deployment contributes anonymized data about drone activity, flight patterns, and threats.',
+    's12-p3num': 'Phase 03',
+    's12-p3title': 'Airspace Intelligence Network',
+    's12-p3desc': 'Security operators gain real-time shared airspace awareness. Network-level threat intelligence.',
+    's12-keyline': 'Every new deployment makes the network smarter.',
+    's13-eyebrow': 'Vision',
+    's13-headline': 'Security Infrastructure<br>Evolves in Layers',
+    's13-l1': 'Locks &amp; Physical Barriers',
+    's13-l2': 'Cameras &amp; Video Surveillance',
+    's13-l3': 'Alarms &amp; Intrusion Detection',
+    's13-l4': 'Access Control &amp; Identity',
+    's13-l5': 'Analytics &amp; Behavior Intelligence',
+    's13-l6': 'Airspace Monitoring',
+    's13-badge': 'Next Layer',
+    's13-close': 'Gargoyle aims to become the <strong>standard layer</strong> protecting the airspace above critical assets worldwide.',
+    's14-eyebrow': 'Strategic Context',
+    's14-headline': 'Where Gargoyle Fits<br>in the Security Stack',
+    's14-l1': 'Physical Barriers &amp; Guards',
+    's14-l2': 'Camera &amp; Video Surveillance',
+    's14-l3': 'Alarms &amp; Intrusion Detection',
+    's14-l4': 'Access Control &amp; Identity',
+    's14-l5': 'Analytics &amp; Behavior Intelligence',
+    's14-sep': 'Gargoyle Adds',
+    's14-l6': 'Airspace Monitoring',
+    's14-close': 'Every major security acquirer already owns layers 1–5.<br>Gargoyle is the natural next addition to any security platform.',
+    's15-eyebrow': 'Strategic Value',
+    's15-headline': 'Acquisition Pathways',
+    's15-sub': 'Security infrastructure consolidates rapidly once a new threat category emerges.<br>Airspace security becomes the next layer of the security stack.',
+    's15-col1-title': 'Enterprise Security',
+    's15-col2-title': 'Consumer Security',
+    's15-col3-title': 'Defense Platforms',
+    's15-col1-desc': 'Adds airspace protection to existing security platforms and increases recurring revenue per facility.',
+    's15-col2-desc': 'Extends home and small business security from ground monitoring to airspace awareness.',
+    's15-col3-desc': 'Provides distributed commercial detection infrastructure that complements existing radar and defense systems.',
+    's15-closing': 'Airspace monitoring becomes a natural extension of existing security infrastructure.<br>Multiple industries are positioned to integrate this capability.',
+    's15-footer': 'Strategic integrations can scale rapidly across existing security portfolios.',
+    's16-eyebrow': 'Get in Touch',
+    's16-sub': 'Airspace Security Infrastructure for the Drone Era.',
+    's16-email-label': 'Email',
+    's16-web-label': 'Web',
+    's16-footer': '© 2026 Gargoyle Systems &nbsp;·&nbsp; Confidential Investor Information',
+  },
+  jp: {
+    'gate-eyebrow': '投資家アクセス',
+    'gate-headline': 'ガーゴイルシステムズ<br>投資家説明資料',
+    'gate-sub': 'ガーゴイルシステムズは、重要資産上空の空域を保護するインフラを構築しています。<br>完全な投資家向け説明資料を閲覧するには、メールアドレスを入力してください。',
+    'gate-btn': '資料を見る →',
+    'gate-privacy': 'スパムはありません。投資家の関心追跡のみに使用します。',
+    'nav-hint': 'クリックして進む',
+    's1-sub': 'マネージド空域セキュリティインフラ',
+    's1-tagline': '重要資産の上空を守る。',
+    's1-hint': 'クリックまたは↓キーで進む',
+    's2-eyebrow': 'はじめに',
+    's2-headline': 'この資料は<br>あなた向けでないかも',
+    's2-intro': '以下を信じていない方には、',
+    's2-belief1': '<strong>ドローンが日常空域で一般化する</strong>',
+    's2-belief2': '<strong>ドローンによるセキュリティ脅威が増加する</strong>',
+    's2-belief3': '<strong>AIがドローンの大規模展開を加速させる</strong>',
+    's2-close': '…この機会はおそらく適していません。',
+    's3p-eyebrow': '脅威',
+    's3p-headline': '小型ドローンが<br>脅威モデルを変えている',
+    's3p-body': '安価で静かなドローンは、犯行の上空監視、フェンス越えの搬送、地上侵入なしの偵察を可能にします。',
+    's3p-card1-label': '強盗支援',
+    's3p-card1-title': '上空からのリアルタイム監視',
+    's3p-card1-body': '侵入経路、警備動線、対応タイミングを上空から把握し、犯行を連携できます。',
+    's3p-card2-label': '企業スパイ',
+    's3p-card2-title': '立ち入らずに偵察',
+    's3p-card2-body': 'ゲートを越えなくても、ヤード、搬入口、試作品、幹部動線を低コストで観測できます。',
+    's3p-card3-label': 'ペイロード搬送',
+    's3p-card3-title': '物資や装置を投下',
+    's3p-card3-body': '小型ドローンでも、携帯電話、薬物、センサー、悪性ハードウェアを敷地内へ投下できます。',
+    's3p-card4-label': '要人・イベントリスク',
+    's3p-card4-title': '追跡、妨害、混乱',
+    's3p-card4-body': 'キャンパス、邸宅、会場では、要人監視や運営妨害、目立つインシデントの誘発が可能です。',
+    's3p-close': '問題はフェンスが壊れていることではありません。脅威がそもそもゲートを使わないことです。',
+    's3-eyebrow': '顧客',
+    's3-headline': '空域を守るのは誰か？',
+    's3-body': '地上を守る組織が、空域も守る。',
+    's3-corp-name': 'コーポレートセキュリティ',
+    's3-corp-desc': 'データセンター、本社、事業所を保護する企業キャンパス',
+    's3-priv-name': '民間セキュリティ会社',
+    's3-priv-desc': 'サービスポートフォリオを拡大するセキュリティサービス事業者',
+    's3-exec-name': 'エグゼクティブ・プロテクション',
+    's3-exec-desc': '高資産価値個人および経営幹部施設のセキュリティ',
+    's3-evnt-name': 'イベントセキュリティ',
+    's3-evnt-desc': 'スタジアム、コンサート会場、大規模公共イベント',
+    's3-infr-name': '重要インフラ',
+    's3-infr-desc': '発電所、ユーティリティ、水処理施設、工業施設',
+    's3-unis-name': '大学・研究機関',
+    's3-unis-desc': '機密施設を保護するキャンパスセキュリティチーム',
+    's4-eyebrow': '課題',
+    's4-headline': '対ドローン技術は<br>軍向けに開発された',
+    's4-body': 'ビジネス向けではない。',
+    's4-col1-title': '既存ソリューション',
+    's4-bad1': 'レーダーベースの対UASシステム',
+    's4-bad2': 'RF妨害システム',
+    's4-bad3': '政府防衛施設向け',
+    's4-bad4': '専門の軍事オペレーターが必要',
+    's4-cost': '$100,000 – $1,000,000 / サイト',
+    's4-col2-title': '結果',
+    's4-result': 'ほとんどの企業はドローン対策が<strong>皆無</strong>です。<br><br>技術は存在しますが、商業価格での商業展開を前提に設計されていませんでした。',
+    's5-eyebrow': 'ギャップ',
+    's5-headline': '従来の警備は屋根の高さで終わる',
+    's5-body': 'カメラ、アラーム、アクセス制御、外周警備は地上を守ります。<br>しかしその上の空域は、依然として抜け落ちたレイヤーです。',
+    's5-sky-label': '無監視空域',
+    's5-no-detect': '検知なし',
+    's5-drone-label': '不正ドローン',
+    's5-badge-cam': 'カメラ',
+    's5-badge-alarm': '警報',
+    's5-badge-access': 'アクセス制御',
+    's5-badge-perim': '周辺警戒',
+    's5-ground-bar': '地上カバー済み',
+    's5-pill-cam': 'カメラ',
+    's5-pill-alarm': '警報',
+    's5-pill-access': 'アクセス制御',
+    's5-pill-perim': '周辺センサー',
+    's5-pill-motion': 'モーション検知',
+    's6a-eyebrow': '補足',
+    's6a-headline': '私たちが設置するのはセンサーです。<br>監視用ドローンではありません。',
+    's6a-body': 'Gargoyleは、保護空域に入るドローンを検知・分類する固定ハードウェアを現地へ設置します。',
+    's6a-callout-label': '実際の仕組み',
+    's6a-callout-title': '空を守るための設置型検知インフラ',
+    's6a-point1': '<strong>建物や外周に設置され、</strong> 上空を巡回するドローンではありません。',
+    's6a-point2': '<strong>周辺の飛行体を継続的に検知・分類し、</strong> 既存の警備運用へアラートを送ります。',
+    's6a-point3': '<strong>運用対象は飛行機材の隊列ではなく警備インフラであり、</strong> チームに新たな飛行運用負荷を増やしません。',
+    's6-eyebrow': 'ソリューション',
+    's6-headline': 'Gargoyle',
+    's6-sub': '商業警備チーム向けの固定型空域検知。',
+    's6-point1': '<strong>現地に設置される装置であり、</strong> 巡回用ドローンではありません。',
+    's6-point2': '<strong>警備運用向けに設計され、</strong> 既存ワークフローにそのままアラートを載せられます。',
+    's6-airspace-lbl': '無監視空域',
+    's6-cap1-title': 'センサー展開',
+    's6-cap1-desc': '施設外周に検知ノードを設置。',
+    's6-cap2-title': 'ドローン検知',
+    's6-cap2-desc': '保護空域への侵入を数秒で検知。',
+    's6-cap3-title': 'フライト分類',
+    's6-cap3-desc': '許可フライトと不審機を判別。',
+    's6-cap4-title': 'セキュリティ統合',
+    's6-cap4-desc': '既存の警備システムと運用へ接続。',
+    's6-cap5-title': '即時アラート',
+    's6-cap5-desc': '不審フライトを即時に通知。',
+    's6-cap6-title': 'マネージド監視',
+    's6-cap6-desc': '専門チームなしで24時間監視を実現。',
+    's7-eyebrow': 'カバレッジ',
+    's7-headline': 'ブラインドスポットから<br>フルカバレッジへ',
+    's7-before-label': 'Gargoyle導入前',
+    's7-before-title': '地上セキュリティのみ',
+    's7-b1': '<div class="split-item-dot good"></div>地上周辺監視済み',
+    's7-b2': '<div class="split-item-dot good"></div>アクセスポイント確保済み',
+    's7-b3': '<div class="split-item-dot good"></div>カメラと警報が稼働',
+    's7-b4': '<div class="split-item-dot bad"></div>空域：<strong style="color:#dc2626">完全に無防備</strong>',
+    's7-b5': '<div class="split-item-dot bad"></div>ドローン監視：<strong style="color:#dc2626">検知不可</strong>',
+    's7-b6': '<div class="split-item-dot bad"></div>ペイロード投下：<strong style="color:#dc2626">警報なし</strong>',
+    's7-after-label': 'Gargoyle導入後',
+    's7-after-title': '地上＋空域<br>フルカバレッジ',
+    's7-a1': '<div class="split-item-dot good"></div>地上周辺監視済み',
+    's7-a2': '<div class="split-item-dot good"></div>アクセスポイント確保済み',
+    's7-a3': '<div class="split-item-dot good"></div>カメラと警報が稼働',
+    's7-a4': '<div class="split-item-dot good"></div>空域：<strong style="color:#059669">リアルタイム検知</strong>',
+    's7-a5': '<div class="split-item-dot good"></div>ドローン追跡：<strong style="color:#059669">即時分類</strong>',
+    's7-a6': '<div class="split-item-dot good"></div>不正飛行：<strong style="color:#059669">即時アラート</strong>',
+    's8-eyebrow': 'インサイト',
+    's8-headline': 'すべてのセキュリティが<br>空域を見逃している',
+    's8-panel1-title': '地上：完全保護',
+    's8-g1': '<span class="miss-check">✓</span>映像監視',
+    's8-g2': '<span class="miss-check">✓</span>侵入検知',
+    's8-g3': '<span class="miss-check">✓</span>アクセス制御',
+    's8-g4': '<span class="miss-check">✓</span>周辺フェンス',
+    's8-g5': '<span class="miss-check">✓</span>警備員巡回',
+    's8-panel2-title': '空域：完全に無防備',
+    's8-a1': '<span class="miss-x">✗</span>空中監視検知',
+    's8-a2': '<span class="miss-x">✗</span>ドローン追跡',
+    's8-a3': '<span class="miss-x">✗</span>ペイロード監視',
+    's8-a4': '<span class="miss-x">✗</span>フライト分類',
+    's8-a5': '<span class="miss-x">✗</span>空域アラート',
+    's8-tagline': '<span>地上セキュリティは標準です。</span> &nbsp;空域セキュリティが次のステップ。',
+    's9-eyebrow': '競合ポジション',
+    's9-headline': 'なぜGargoyleが勝つのか',
+    's9-col-mil': '軍用システム',
+    's9-row1': '顧客',
+    's9-row2': 'コスト',
+    's9-row3': '導入',
+    's9-row4': '運用',
+    's9-row5': 'ビジネスモデル',
+    's9-row6': '統合',
+    's9-mil1': '防衛・政府機関',
+    's9-mil2': '$100k – $1M+ / サイト',
+    's9-mil3': '複雑で数ヶ月かかる',
+    's9-mil4': '専門の軍事オペレーター',
+    's9-mil5': 'ハードウェア販売、一回限り',
+    's9-mil6': '独立した、サイロ型',
+    's9-gar1': 'エンタープライズセキュリティチーム',
+    's9-gar2': '手頃な価格 — サブスクリプション',
+    's9-gar3': '迅速設置、数日で完了',
+    's9-gar4': '既存のセキュリティチーム',
+    's9-gar5': '継続的マネージドサービス',
+    's9-gar6': 'ネイティブセキュリティスタック統合',
+    's10-eyebrow': '市場',
+    's10-headline': '市場規模',
+    's10-body': 'ドローンの普及に伴い、ドローン検知市場は急速に拡大しています。保護対象となるあらゆる施設が、空域監視の潜在顧客です。',
+    's10-chart1-title': '主要な導入セグメント',
+    's10-seg1': '企業キャンパス',
+    's10-seg2': 'スタジアム・会場',
+    's10-seg3': 'データセンター',
+    's10-seg4': '産業施設',
+    's10-seg5': '物流ハブ',
+    's10-seg6': '大学',
+    's10-chart2-title': 'ドローン検知市場の成長予測',
+    's11-eyebrow': 'ビジネスモデル',
+    's11-headline': 'サイトごとの<br>継続的セキュリティサービス',
+    's11-s1num': 'ストリーム 01',
+    's11-s1title': 'センサー展開',
+    's11-s1desc': '施設周辺全体へのハードウェア設置。サイトごとの初期設定費用。',
+    's11-s2num': 'ストリーム 02',
+    's11-s2title': 'SaaSプラットフォーム',
+    's11-s2desc': 'クラウドベースの空域監視ダッシュボード、アラート、分析。サイトごとの月次サブスクリプション。',
+    's11-s3num': 'ストリーム 03',
+    's11-s3title': 'マネージドサービス',
+    's11-s3desc': '24/7 SOC監視、脅威対応、レポーティング — 完全マネージド継続サービス。',
+    's11-expand-label': '導入・拡大戦略',
+    's11-expand-text': '1施設への導入 → 全物件ポートフォリオへの展開。<br>1人のセキュリティ責任者との関係が数十の施設を開く。',
+    's12-eyebrow': '成長戦略',
+    's12-headline': '拡大パス',
+    's12-sub': '検知から空域インテリジェンスネットワークへ',
+    's12-p1num': 'フェーズ 01',
+    's12-p1title': '検知インフラ',
+    's12-p1desc': '商業施設全体にセンサーを展開。エンタープライズセキュリティチームと継続収益基盤を構築。',
+    's12-p2num': 'フェーズ 02',
+    's12-p2title': '空域データレイヤー',
+    's12-p2desc': '各導入がドローン活動、飛行パターン、脅威に関する匿名化データを提供。',
+    's12-p3num': 'フェーズ 03',
+    's12-p3title': '空域インテリジェンスネットワーク',
+    's12-p3desc': 'セキュリティオペレーターがリアルタイムの共有空域認識を取得。ネットワークレベルの脅威インテリジェンス。',
+    's12-keyline': '新しい導入のたびにネットワークが賢くなる。',
+    's13-eyebrow': 'ビジョン',
+    's13-headline': 'セキュリティインフラは<br>レイヤーで進化する',
+    's13-l1': '鍵と物理的障壁',
+    's13-l2': 'カメラと映像監視',
+    's13-l3': '警報と侵入検知',
+    's13-l4': 'アクセス制御とID管理',
+    's13-l5': '分析と行動インテリジェンス',
+    's13-l6': '空域モニタリング',
+    's13-badge': '次のレイヤー',
+    's13-close': 'Gargoyleは、世界中の重要資産の上空を保護する<strong>標準レイヤー</strong>になることを目指しています。',
+    's14-eyebrow': '戦略的コンテキスト',
+    's14-headline': 'GargoyleはセキュリティスタックのどこにFitするか',
+    's14-l1': '物理的障壁と警備',
+    's14-l2': 'カメラと映像監視',
+    's14-l3': '警報と侵入検知',
+    's14-l4': 'アクセス制御とID管理',
+    's14-l5': '分析と行動インテリジェンス',
+    's14-sep': 'Gargoyleが追加',
+    's14-l6': '空域モニタリング',
+    's14-close': '主要なセキュリティ買収企業はすでにレイヤー1〜5を保有しています。<br>GargoyleはあらゆるセキュリティプラットフォームへのNextの追加です。',
+    's15-eyebrow': '戦略的価値',
+    's15-headline': '空域セキュリティのリング',
+    's15-sub': '地上セキュリティ、スマートホーム、防衛システムの各分野が<br>潜在的な買収チャンネルとなります。',
+    's15-col1-title': 'エンタープライズセキュリティ',
+    's15-col2-title': 'コンシューマーセキュリティ',
+    's15-col3-title': '防衛プラットフォーム',
+    's15-col1-desc': '既存のセキュリティプラットフォームに空域保護を追加し、施設ごとの継続収益を増加させます。',
+    's15-col2-desc': '住宅・中小企業のセキュリティを地上監視から空域認識へと拡張します。',
+    's15-col3-desc': '既存のレーダーおよび防衛システムを補完する分散型商用検知インフラを提供します。',
+    's15-closing': 'ガーゴイルは既存の3つのセキュリティカテゴリすべてにとって自然な拡張です。<br>各業界はすでに隣接するレイヤーを所有しています。',
+    's15-footer': '空域セキュリティは、地上セキュリティ・スマートホーム・防衛の交差点に位置します。',
+    's16-eyebrow': 'お問い合わせ',
+    's16-sub': 'ドローン時代の空域セキュリティインフラ。',
+    's16-email-label': 'メール',
+    's16-web-label': 'ウェブ',
+    's16-footer': '© 2026 Gargoyle Systems &nbsp;·&nbsp; 機密投資家情報',
+  }
+};
+
+let currentLang = 'en';
+
+function setLang(lang) {
+  currentLang = lang;
+  // Update all data-i18n elements
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.dataset.i18n;
+    const val = T[lang][key];
+    if (val !== undefined) {
+      // For gap-ground-bar, preserve the SVG checkmark
+      if (key === 's5-ground-bar') {
+        const svg = el.querySelector('svg');
+        el.innerHTML = (svg ? svg.outerHTML : '') + ' ' + val;
+      } else {
+        el.innerHTML = val;
+      }
+    }
+  });
+  // Toggle slide 15 company sets
+  document.querySelectorAll('.acq-co-en').forEach(el => el.style.display = lang === 'en' ? '' : 'none');
+  document.querySelectorAll('.acq-co-jp').forEach(el => el.style.display = lang === 'jp' ? '' : 'none');
+  // Update toggle button active state
+  document.querySelectorAll('.lang-opt').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.l === lang);
+  });
+  // Update html lang attribute
+  document.documentElement.lang = lang === 'jp' ? 'ja' : 'en';
+}
+</script>
+</body>
+</html>
